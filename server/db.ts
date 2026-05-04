@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, and, desc, asc, gte, lte, sql, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, properties, propertyImages, propertyViews, adminStats, InsertProperty, InsertPropertyImage, Property } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -35,7 +35,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     };
     const updateSet: Record<string, unknown> = {};
 
-    const textFields = ["name", "email", "loginMethod"] as const;
+    const textFields = ["name", "email", "loginMethod", "phoneNumber"] as const;
     type TextField = (typeof textFields)[number];
 
     const assignNullable = (field: TextField) => {
@@ -89,4 +89,153 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+/**
+ * Properties queries
+ */
+export async function createProperty(data: InsertProperty) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(properties).values(data);
+  return result[0];
+}
+
+export async function getPropertyById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(properties).where(eq(properties.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getPropertiesByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(properties).where(eq(properties.userId, userId)).orderBy(desc(properties.createdAt));
+}
+
+export async function getActiveProperties(filters?: {
+  type?: string;
+  operationType?: string;
+  location?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  minArea?: number;
+  maxArea?: number;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const conditions = [eq(properties.isActive, true)];
+  
+  if (filters?.type) conditions.push(eq(properties.type, filters.type as any));
+  if (filters?.operationType) conditions.push(eq(properties.operationType, filters.operationType as any));
+  if (filters?.location) conditions.push(sql`${properties.location} LIKE ${`%${filters.location}%`}`);
+  if (filters?.minPrice) conditions.push(gte(properties.price, filters.minPrice.toString()));
+  if (filters?.maxPrice) conditions.push(lte(properties.price, filters.maxPrice.toString()));
+  if (filters?.minArea && properties.area) conditions.push(gte(properties.area, filters.minArea));
+  if (filters?.maxArea && properties.area) conditions.push(lte(properties.area, filters.maxArea));
+  
+  return db.select().from(properties).where(and(...conditions)).orderBy(desc(properties.createdAt));
+}
+
+export async function updateProperty(id: number, data: Partial<Property>) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.update(properties).set(data).where(eq(properties.id, id));
+  return result[0];
+}
+
+export async function deleteProperty(id: number) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  await db.delete(properties).where(eq(properties.id, id));
+  return true;
+}
+
+/**
+ * Property images queries
+ */
+export async function addPropertyImage(data: InsertPropertyImage) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(propertyImages).values(data);
+  return result[0];
+}
+
+export async function getPropertyImages(propertyId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(propertyImages).where(eq(propertyImages.propertyId, propertyId)).orderBy(asc(propertyImages.order));
+}
+
+export async function deletePropertyImage(id: number) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  await db.delete(propertyImages).where(eq(propertyImages.id, id));
+  return true;
+}
+
+/**
+ * Property views tracking
+ */
+export async function trackPropertyView(propertyId: number) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  await db.insert(propertyViews).values({ propertyId });
+  return true;
+}
+
+export async function getPropertyViewCount(propertyId: number) {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const result = await db.select({ count: count() }).from(propertyViews).where(eq(propertyViews.propertyId, propertyId));
+  return result[0]?.count || 0;
+}
+
+/**
+ * Admin statistics
+ */
+export async function getAdminStats() {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(adminStats).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updateAdminStats() {
+  const db = await getDb();
+  if (!db) return false;
+  
+  const totalUsersResult = await db.select({ count: count() }).from(users);
+  const totalPropertiesResult = await db.select({ count: count() }).from(properties);
+  const totalViewsResult = await db.select({ count: count() }).from(propertyViews);
+  const rentListingsResult = await db.select({ count: count() }).from(properties).where(eq(properties.operationType, 'rent'));
+  const saleListingsResult = await db.select({ count: count() }).from(properties).where(eq(properties.operationType, 'sale'));
+  
+  const stats = {
+    totalUsers: totalUsersResult[0]?.count || 0,
+    totalProperties: totalPropertiesResult[0]?.count || 0,
+    totalViews: totalViewsResult[0]?.count || 0,
+    totalRentListings: rentListingsResult[0]?.count || 0,
+    totalSaleListings: saleListingsResult[0]?.count || 0,
+  };
+  
+  const existing = await getAdminStats();
+  if (existing) {
+    await db.update(adminStats).set(stats).where(eq(adminStats.id, existing.id));
+  } else {
+    await db.insert(adminStats).values(stats as any);
+  }
+  
+  return true;
+}
