@@ -1,96 +1,86 @@
+import { useState } from "react";
+import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, MapPin, Home as HomeIcon, Waves, Menu, Heart, Settings } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { MapPin, Search, Waves, Heart, Settings, HomeIcon, Anchor, Umbrella, Users } from "lucide-react";
 import { getLoginUrl } from "@/const";
-import { useLocation } from "wouter";
-import { useState } from "react";
-import { trpc } from "@/lib/trpc";
 
 export default function Home() {
-  const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
+  const { isAuthenticated, user } = useAuth();
   const [searchLocation, setSearchLocation] = useState("");
-  const [operationType, setOperationType] = useState<"sale" | "rent">("sale");
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchLocation) params.append("location", searchLocation);
-    params.append("operationType", operationType);
-    if (priceMin) params.append("priceMin", priceMin);
-    if (priceMax) params.append("priceMax", priceMax);
-    
+    if (priceMin) params.append("minPrice", priceMin);
+    if (priceMax) params.append("maxPrice", priceMax);
     setLocation(`/properties?${params.toString()}`);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background" dir="rtl">
+    <div className="min-h-screen bg-background" dir="rtl">
       {/* Top Status Bar */}
-      <div className="bg-foreground text-background text-xs px-4 py-2 flex justify-between items-center">
+      <div className="bg-gray-900 text-white text-xs py-1 px-4 flex justify-between items-center">
         <div className="flex gap-2">
           <span>%0V</span>
-          <span>📱</span>
-          <span>📶📶</span>
+          <span>📶</span>
           <span>📡</span>
+          <span>🔋</span>
         </div>
         <div className="flex gap-2">
           <span>9:06</span>
           <span>📞</span>
-          <span>📘</span>
+          <span>👤</span>
         </div>
       </div>
 
       {/* Promo Banner */}
-      <div className="bg-gradient-to-r from-blue-900 to-purple-900 text-white px-4 py-3 flex justify-between items-center">
-        <Button size="sm" className="bg-red-500 hover:bg-red-600 text-white">تنزيل</Button>
+      <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-4 flex justify-between items-center">
+        <button className="text-2xl">✕</button>
         <div className="text-center flex-1">
-          <h3 className="font-bold">بروبرتي فايندر</h3>
-          <div className="flex justify-center gap-1">⭐⭐⭐⭐⭐</div>
-          <p className="text-xs">مجاني - 2.5 مليون تحميل</p>
+          <h3 className="font-bold">عقارات رأس البر</h3>
+          <div className="flex justify-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <span key={i} className="text-yellow-300">⭐</span>
+            ))}
+          </div>
+          <p className="text-sm">مجاني - 2.5 مليون تحميل</p>
         </div>
-        <div className="bg-red-500 rounded-full w-10 h-10 flex items-center justify-center">❤️</div>
+        <button className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold">تنزيل</button>
       </div>
 
-      {/* Header/Navigation */}
-      <header className="bg-white border-b border-border sticky top-0 z-40">
-        <div className="container px-4 py-4 flex items-center justify-between">
-          <Menu className="w-6 h-6 md:hidden" />
-          
-          <div className="flex items-center gap-3 flex-1 md:flex-none">
-            <div className="flex items-center gap-2 text-red-500">
-              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">P</div>
-              <h1 className="text-xl font-bold hidden md:block">بروبرتي فايندر</h1>
-            </div>
-          </div>
-
-          <div className="hidden md:flex items-center gap-4 flex-1 justify-center">
-            <button className="p-2 hover:bg-gray-100 rounded-lg">❤️</button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg">⚙️</button>
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
+        <div className="container px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button className="p-2 hover:bg-gray-100 rounded-lg">⋮</button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg">🏠</button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg">💬</button>
             <div className="flex items-center gap-2 bg-gray-900 text-white px-3 py-2 rounded-full text-sm">
               <span>🔍</span>
-              <span>propertyfinder.eg</span>
+              <span>raselbar.eg</span>
             </div>
-            <button className="p-2 hover:bg-gray-100 rounded-lg">🏠</button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg">❤️</button>
           </div>
-
-          <div className="flex items-center gap-2 md:hidden">
-            <Heart className="w-5 h-5" />
-            <Settings className="w-5 h-5" />
-            <HomeIcon className="w-5 h-5" />
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-red-500 text-lg">P</span>
+            <span className="font-bold text-lg">عقارات رأس البر</span>
           </div>
         </div>
       </header>
 
-      {/* Hero Section with Background Image */}
+      {/* Hero Section */}
       <section className="relative h-96 md:h-[500px] bg-cover bg-center overflow-hidden" style={{
         backgroundImage: 'linear-gradient(135deg, rgba(30, 58, 138, 0.7), rgba(139, 69, 19, 0.7)), url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22%3E%3Crect fill=%22%231e3a8a%22 width=%221200%22 height=%22600%22/%3E%3C/svg%3E")'
       }}>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">البحث عن المنازل يبدأ هنا</h2>
-          <p className="text-lg md:text-xl opacity-90 mb-8">اكتشف عقارات للشراء أو الاستئجار أو الاستثمار</p>
+          <p className="text-lg md:text-xl opacity-90 mb-8">اكتشف عقارات للشراء أو الاستئجار في رأس البر</p>
         </div>
       </section>
 
@@ -99,10 +89,9 @@ export default function Home() {
         <div className="container px-4">
           {/* Tabs */}
           <Tabs defaultValue="sale" className="w-full mb-6" dir="rtl">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 bg-gray-100">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-gray-100">
               <TabsTrigger value="sale">للبيع</TabsTrigger>
               <TabsTrigger value="rent">للإيجار</TabsTrigger>
-              <TabsTrigger value="new">مشاريع جديدة</TabsTrigger>
             </TabsList>
 
             <TabsContent value="sale" className="mt-6">
@@ -113,14 +102,13 @@ export default function Home() {
                     <MapPin className="w-5 h-5 text-red-500 flex-shrink-0" />
                     <Input
                       type="text"
-                      placeholder="أدخل المدينة أو المنطقة أو اسم البناء"
+                      placeholder="ابحث عن منطقة أو اسم البناء"
                       value={searchLocation}
                       onChange={(e) => setSearchLocation(e.target.value)}
                       className="border-0 bg-transparent text-foreground placeholder:text-gray-500 focus:outline-none text-sm"
                       dir="rtl"
                     />
                   </div>
-
                   {/* Price Min */}
                   <Input
                     type="number"
@@ -130,7 +118,6 @@ export default function Home() {
                     className="bg-gray-100 border-0 rounded-lg"
                     dir="rtl"
                   />
-
                   {/* Price Max */}
                   <Input
                     type="number"
@@ -140,7 +127,6 @@ export default function Home() {
                     className="bg-gray-100 border-0 rounded-lg"
                     dir="rtl"
                   />
-
                   {/* Search Button */}
                   <Button
                     onClick={handleSearch}
@@ -160,40 +146,33 @@ export default function Home() {
                     <MapPin className="w-5 h-5 text-red-500 flex-shrink-0" />
                     <Input
                       type="text"
-                      placeholder="أدخل المدينة أو المنطقة"
+                      placeholder="ابحث عن منطقة أو اسم البناء"
                       value={searchLocation}
                       onChange={(e) => setSearchLocation(e.target.value)}
                       className="border-0 bg-transparent text-foreground placeholder:text-gray-500 focus:outline-none text-sm"
                       dir="rtl"
                     />
                   </div>
-                  <Input type="number" placeholder="السعر من" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
-                  <Input type="number" placeholder="السعر إلى" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
-                  <Button onClick={handleSearch} className="bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 h-12">
-                    <Search className="w-5 h-5" />
-                    بحث
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="new" className="mt-6">
-              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-5xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-3">
-                    <MapPin className="w-5 h-5 text-red-500 flex-shrink-0" />
-                    <Input
-                      type="text"
-                      placeholder="أدخل المدينة أو المنطقة"
-                      value={searchLocation}
-                      onChange={(e) => setSearchLocation(e.target.value)}
-                      className="border-0 bg-transparent text-foreground placeholder:text-gray-500 focus:outline-none text-sm"
-                      dir="rtl"
-                    />
-                  </div>
-                  <Input type="number" placeholder="السعر من" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
-                  <Input type="number" placeholder="السعر إلى" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
-                  <Button onClick={handleSearch} className="bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 h-12">
+                  <Input
+                    type="number"
+                    placeholder="الإيجار من"
+                    value={priceMin}
+                    onChange={(e) => setPriceMin(e.target.value)}
+                    className="bg-gray-100 border-0 rounded-lg"
+                    dir="rtl"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="الإيجار إلى"
+                    value={priceMax}
+                    onChange={(e) => setPriceMax(e.target.value)}
+                    className="bg-gray-100 border-0 rounded-lg"
+                    dir="rtl"
+                  />
+                  <Button
+                    onClick={handleSearch}
+                    className="bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 h-12"
+                  >
                     <Search className="w-5 h-5" />
                     بحث
                   </Button>
@@ -204,108 +183,172 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Properties */}
-      <section className="py-12 bg-gray-50">
+      {/* About Ras El Bar Section */}
+      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
         <div className="container px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">أحدث العقارات</h2>
-          <FeaturedPropertiesList />
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">عن مدينة رأس البر</h2>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            مدينة ساحلية سياحية جميلة تقع على ساحل البحر المتوسط، تتمتع برمال ذهبية وشواطئ نظيفة وطقس معتدل طوال العام
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* Tourism Info */}
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+              <Anchor className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+              <h3 className="font-bold text-lg mb-2">وجهة سياحية عالمية</h3>
+              <p className="text-gray-600 text-sm">
+                تستقطب آلاف السياح سنوياً للاستمتاع بشواطئها الخلابة والأنشطة البحرية المتنوعة
+              </p>
+            </div>
+
+            {/* Climate Info */}
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+              <Umbrella className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+              <h3 className="font-bold text-lg mb-2">مناخ معتدل</h3>
+              <p className="text-gray-600 text-sm">
+                طقس دافئ في الصيف وبارد معتدل في الشتاء، مما يجعلها مثالية للعيش طوال السنة
+              </p>
+            </div>
+
+            {/* Community Info */}
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+              <Users className="w-12 h-12 text-green-500 mx-auto mb-4" />
+              <h3 className="font-bold text-lg mb-2">مجتمع حيوي</h3>
+              <p className="text-gray-600 text-sm">
+                مجتمع متنوع من السكان والسياح، مع خدمات عامة متطورة وفرص استثمارية عديدة
+              </p>
+            </div>
+          </div>
+
+          {/* Key Facts */}
+          <div className="bg-gradient-coastal rounded-xl p-8 text-white">
+            <h3 className="text-2xl font-bold mb-6 text-center">حقائق عن رأس البر</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+              <div>
+                <p className="text-3xl font-bold">📍</p>
+                <p className="text-sm mt-2">تقع على البحر المتوسط</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold">🌊</p>
+                <p className="text-sm mt-2">شواطئ رملية ذهبية</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold">☀️</p>
+                <p className="text-sm mt-2">300 يوم مشمس سنوياً</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold">🏖️</p>
+                <p className="text-sm mt-2">وجهة سياحية عالمية</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Neighborhoods */}
+      <section className="py-16 bg-white">
+        <div className="container px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">المناطق الشهيرة في رأس البر</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { name: "الشاطئ الرئيسي", desc: "المنطقة الأكثر حيوية مع فنادق ومطاعم عالمية" },
+              { name: "حي السياحة", desc: "منطقة سكنية هادئة قريبة من الشاطئ" },
+              { name: "المنطقة التجارية", desc: "مركز تجاري حديث مع متاجر وخدمات" },
+              { name: "حي الفيلات", desc: "منطقة فاخرة للعقارات السكنية الراقية" },
+              { name: "المنطقة الشرقية", desc: "منطقة سكنية جديدة قيد التطوير" },
+              { name: "حي الميناء", desc: "منطقة تاريخية مع إطلالات بحرية خلابة" },
+            ].map((area, idx) => (
+              <div key={idx} className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <h3 className="font-bold text-lg mb-2 text-blue-900">{area.name}</h3>
+                <p className="text-gray-700 text-sm">{area.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div className="container px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">ابدأ البحث عن عقارك الآن</h2>
+          <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
+            اكتشف أفضل العقارات في رأس البر مع أسعار تنافسية وخدمة عملاء متميزة
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              onClick={() => setLocation("/map")}
+              className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-lg font-bold text-lg"
+            >
+              اكتشف على الخريطة
+            </Button>
+            <Button
+              onClick={() => setLocation("/properties")}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-bold text-lg"
+            >
+              استعرض العقارات
+            </Button>
+            {!isAuthenticated ? (
+              <a href={getLoginUrl()}>
+                <Button className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold text-lg">
+                  أضف إعلانك
+                </Button>
+              </a>
+            ) : (
+              <Button
+                onClick={() => setLocation("/add-property")}
+                className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold text-lg"
+              >
+                أضف إعلانك
+              </Button>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-foreground text-background py-12">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="container px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h5 className="font-bold mb-4">عقارات رأس البر</h5>
-              <p className="text-sm opacity-70">منصة موثوقة للعقارات في رأس البر</p>
+              <h4 className="font-bold mb-4 flex items-center gap-2">
+                <Waves className="w-5 h-5" />
+                عقارات رأس البر
+              </h4>
+              <p className="text-sm text-gray-400">
+                منصة عقارات موثوقة متخصصة في بيع وإيجار العقارات في رأس البر
+              </p>
             </div>
             <div>
-              <h5 className="font-bold mb-4">الروابط</h5>
-              <ul className="space-y-2 text-sm opacity-70">
-                <li><a href="/" className="hover:opacity-100">الرئيسية</a></li>
-                <li><a href="/properties" className="hover:opacity-100">العقارات</a></li>
+              <h4 className="font-bold mb-4">الروابط السريعة</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><button onClick={() => setLocation("/properties")} className="hover:text-white">البحث عن عقارات</button></li>
+                <li><button onClick={() => setLocation("/add-property")} className="hover:text-white">أضف إعلان</button></li>
+                <li><button onClick={() => setLocation("/dashboard")} className="hover:text-white">لوحة التحكم</button></li>
               </ul>
             </div>
             <div>
-              <h5 className="font-bold mb-4">المساعدة</h5>
-              <ul className="space-y-2 text-sm opacity-70">
-                <li><span className="text-xs bg-accent/20 px-2 py-1 rounded">قريباً</span></li>
+              <h4 className="font-bold mb-4">عن رأس البر</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>مدينة ساحلية سياحية</li>
+                <li>على البحر المتوسط</li>
+                <li>وجهة عالمية</li>
               </ul>
             </div>
             <div>
-              <h5 className="font-bold mb-4">المتابعة</h5>
-              <ul className="space-y-2 text-sm opacity-70">
-                <li><span className="text-xs bg-accent/20 px-2 py-1 rounded">قريباً</span></li>
+              <h4 className="font-bold mb-4">تواصل معنا</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>📞 +20 123 456 7890</li>
+                <li>📧 info@raselbar.eg</li>
+                <li>📍 رأس البر، مصر</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-white/10 pt-8 text-center text-sm opacity-70">
+          <div className="border-t border-gray-700 pt-8 text-center text-sm text-gray-400">
             <p>&copy; 2026 عقارات رأس البر. جميع الحقوق محفوظة.</p>
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function FeaturedPropertiesList() {
-  const { data: properties, isLoading, error } = trpc.properties.list.useQuery({ });
-
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-muted rounded-lg h-64 animate-pulse"></div>
-        ))}
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-12 card-elevated">
-        <p className="text-destructive text-lg mb-4">حدث خطأ في تحميل الإعلانات</p>
-        <Button onClick={() => window.location.reload()} variant="outline">
-          إعادة المحاولة
-        </Button>
-      </div>
-    );
-  }
-
-  if (!properties || properties.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground text-lg">لا توجد إعلانات حالياً</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {properties.slice(0, 6).map((property) => (
-        <a key={property.id} href={`/property/${property.id}`} className="group">
-          <div className="card-elevated overflow-hidden h-full hover:shadow-lg transition-shadow">
-            <div className="bg-gradient-coastal h-48 flex items-center justify-center text-white relative">
-              <HomeIcon className="w-12 h-12 opacity-50" />
-              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                {property.operationType === 'sale' ? 'بيع' : 'إيجار'}
-              </div>
-            </div>
-            <div className="p-4">
-              <h4 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">{property.title}</h4>
-              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{property.description}</p>
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-lg font-bold text-primary">{property.price.toLocaleString()} ريال</span>
-                <span className="text-xs bg-gray-100 px-2 py-1 rounded">{property.location}</span>
-              </div>
-              {property.area && (
-                <p className="text-xs text-muted-foreground">المساحة: {property.area} م²</p>
-              )}
-            </div>
-          </div>
-        </a>
-      ))}
     </div>
   );
 }
