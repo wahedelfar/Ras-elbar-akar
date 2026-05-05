@@ -1,8 +1,8 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Home as HomeIcon, Waves } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, MapPin, Home as HomeIcon, Waves, Menu, Heart, Settings } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useState } from "react";
@@ -12,195 +12,212 @@ export default function Home() {
   const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   const [searchLocation, setSearchLocation] = useState("");
-  const [operationType, setOperationType] = useState<"sale" | "rent" | "">("");
-  const [propertyType, setPropertyType] = useState("");
+  const [operationType, setOperationType] = useState<"sale" | "rent">("sale");
+  const [priceMin, setPriceMin] = useState("");
+  const [priceMax, setPriceMax] = useState("");
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchLocation) params.append("location", searchLocation);
-    if (operationType) params.append("operationType", operationType);
-    if (propertyType) params.append("type", propertyType);
+    params.append("operationType", operationType);
+    if (priceMin) params.append("priceMin", priceMin);
+    if (priceMax) params.append("priceMax", priceMax);
     
     setLocation(`/properties?${params.toString()}`);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-background" dir="rtl">
+      {/* Top Status Bar */}
+      <div className="bg-foreground text-background text-xs px-4 py-2 flex justify-between items-center">
+        <div className="flex gap-2">
+          <span>%0V</span>
+          <span>📱</span>
+          <span>📶📶</span>
+          <span>📡</span>
+        </div>
+        <div className="flex gap-2">
+          <span>9:06</span>
+          <span>📞</span>
+          <span>📘</span>
+        </div>
+      </div>
+
+      {/* Promo Banner */}
+      <div className="bg-gradient-to-r from-blue-900 to-purple-900 text-white px-4 py-3 flex justify-between items-center">
+        <Button size="sm" className="bg-red-500 hover:bg-red-600 text-white">تنزيل</Button>
+        <div className="text-center flex-1">
+          <h3 className="font-bold">بروبرتي فايندر</h3>
+          <div className="flex justify-center gap-1">⭐⭐⭐⭐⭐</div>
+          <p className="text-xs">مجاني - 2.5 مليون تحميل</p>
+        </div>
+        <div className="bg-red-500 rounded-full w-10 h-10 flex items-center justify-center">❤️</div>
+      </div>
+
       {/* Header/Navigation */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-border">
-        <div className="container flex items-center justify-between h-20">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 text-primary">
-              <Waves className="w-8 h-8" />
-              <h1 className="text-2xl font-bold">عقارات رأس البر</h1>
+      <header className="bg-white border-b border-border sticky top-0 z-40">
+        <div className="container px-4 py-4 flex items-center justify-between">
+          <Menu className="w-6 h-6 md:hidden" />
+          
+          <div className="flex items-center gap-3 flex-1 md:flex-none">
+            <div className="flex items-center gap-2 text-red-500">
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">P</div>
+              <h1 className="text-xl font-bold hidden md:block">بروبرتي فايندر</h1>
             </div>
           </div>
-          
-          <nav className="hidden md:flex items-center gap-6">
-            <a href="/" className="text-foreground hover:text-primary transition-colors">الرئيسية</a>
-            <a href="/properties" className="text-foreground hover:text-primary transition-colors">العقارات</a>
-            {isAuthenticated && (
-              <>
-                <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">لوحة التحكم</a>
-                {user?.role === 'admin' && (
-                  <a href="/admin" className="text-foreground hover:text-primary transition-colors">الإدارة</a>
-                )}
-              </>
-            )}
-          </nav>
 
-          <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <>
-                <a href="/profile">
-                  <Button variant="outline" size="sm">{user?.name || "الملف الشخصي"}</Button>
-                </a>
-                <a href="/add-property">
-                  <Button size="sm" className="bg-accent hover:bg-accent/90">إضافة إعلان</Button>
-                </a>
-              </>
-            ) : (
-              <a href={getLoginUrl()}>
-                <Button size="sm">تسجيل الدخول</Button>
-              </a>
-            )}
+          <div className="hidden md:flex items-center gap-4 flex-1 justify-center">
+            <button className="p-2 hover:bg-gray-100 rounded-lg">❤️</button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg">⚙️</button>
+            <div className="flex items-center gap-2 bg-gray-900 text-white px-3 py-2 rounded-full text-sm">
+              <span>🔍</span>
+              <span>propertyfinder.eg</span>
+            </div>
+            <button className="p-2 hover:bg-gray-100 rounded-lg">🏠</button>
+          </div>
+
+          <div className="flex items-center gap-2 md:hidden">
+            <Heart className="w-5 h-5" />
+            <Settings className="w-5 h-5" />
+            <HomeIcon className="w-5 h-5" />
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-coastal text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="container relative z-10">
-          <div className="max-w-2xl mx-auto text-center mb-12">
-            <h2 className="text-5xl font-bold mb-4">اكتشف عقارات رأس البر</h2>
-            <p className="text-xl opacity-90">منصتك الموثوقة للبحث عن أفضل العقارات في مدينة رأس البر السياحية</p>
-          </div>
-
-          {/* Search Bar */}
-          <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Location Input */}
-              <div className="flex items-center gap-2 bg-input rounded-lg px-4 py-3">
-                <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
-                <Input
-                  type="text"
-                  placeholder="المنطقة أو الموقع"
-                  value={searchLocation}
-                  onChange={(e) => setSearchLocation(e.target.value)}
-                  className="border-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
-                  dir="rtl"
-                />
-              </div>
-
-              {/* Property Type */}
-              <Select value={propertyType} onValueChange={setPropertyType}>
-                <SelectTrigger className="bg-input border-0 rounded-lg">
-                  <HomeIcon className="w-5 h-5 text-primary mr-2" />
-                  <SelectValue placeholder="نوع العقار" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="apartment">شقة</SelectItem>
-                  <SelectItem value="villa">فيلا</SelectItem>
-                  <SelectItem value="house">منزل</SelectItem>
-                  <SelectItem value="land">أرض</SelectItem>
-                  <SelectItem value="commercial">تجاري</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Operation Type */}
-              <Select value={operationType} onValueChange={(val) => setOperationType(val as "sale" | "rent" | "")}>
-                <SelectTrigger className="bg-input border-0 rounded-lg">
-                  <SelectValue placeholder="بيع أو إيجار" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sale">بيع</SelectItem>
-                  <SelectItem value="rent">إيجار</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Search Button */}
-              <Button 
-                onClick={handleSearch}
-                className="bg-primary hover:bg-primary/90 text-white rounded-lg flex items-center justify-center gap-2"
-              >
-                <Search className="w-5 h-5" />
-                بحث
-              </Button>
-            </div>
-          </div>
+      {/* Hero Section with Background Image */}
+      <section className="relative h-96 md:h-[500px] bg-cover bg-center overflow-hidden" style={{
+        backgroundImage: 'linear-gradient(135deg, rgba(30, 58, 138, 0.7), rgba(139, 69, 19, 0.7)), url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22%3E%3Crect fill=%22%231e3a8a%22 width=%221200%22 height=%22600%22/%3E%3C/svg%3E")'
+      }}>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">البحث عن المنازل يبدأ هنا</h2>
+          <p className="text-lg md:text-xl opacity-90 mb-8">اكتشف عقارات للشراء أو الاستئجار أو الاستثمار</p>
         </div>
       </section>
 
-      {/* Featured Properties Section */}
-      <section className="py-20 bg-background">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h3 className="text-4xl font-bold mb-4">أحدث العقارات</h3>
-            <p className="text-lg text-muted-foreground">اكتشف أحدث الإعلانات العقارية في رأس البر</p>
-          </div>
+      {/* Search Section */}
+      <section className="bg-white py-8 md:py-12 border-b border-gray-200">
+        <div className="container px-4">
+          {/* Tabs */}
+          <Tabs defaultValue="sale" className="w-full mb-6" dir="rtl">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 bg-gray-100">
+              <TabsTrigger value="sale">للبيع</TabsTrigger>
+              <TabsTrigger value="rent">للإيجار</TabsTrigger>
+              <TabsTrigger value="new">مشاريع جديدة</TabsTrigger>
+            </TabsList>
 
+            <TabsContent value="sale" className="mt-6">
+              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-5xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {/* Location Input */}
+                  <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-3">
+                    <MapPin className="w-5 h-5 text-red-500 flex-shrink-0" />
+                    <Input
+                      type="text"
+                      placeholder="أدخل المدينة أو المنطقة أو اسم البناء"
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                      className="border-0 bg-transparent text-foreground placeholder:text-gray-500 focus:outline-none text-sm"
+                      dir="rtl"
+                    />
+                  </div>
+
+                  {/* Price Min */}
+                  <Input
+                    type="number"
+                    placeholder="السعر من"
+                    value={priceMin}
+                    onChange={(e) => setPriceMin(e.target.value)}
+                    className="bg-gray-100 border-0 rounded-lg"
+                    dir="rtl"
+                  />
+
+                  {/* Price Max */}
+                  <Input
+                    type="number"
+                    placeholder="السعر إلى"
+                    value={priceMax}
+                    onChange={(e) => setPriceMax(e.target.value)}
+                    className="bg-gray-100 border-0 rounded-lg"
+                    dir="rtl"
+                  />
+
+                  {/* Search Button */}
+                  <Button
+                    onClick={handleSearch}
+                    className="bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 h-12"
+                  >
+                    <Search className="w-5 h-5" />
+                    بحث
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="rent" className="mt-6">
+              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-5xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-3">
+                    <MapPin className="w-5 h-5 text-red-500 flex-shrink-0" />
+                    <Input
+                      type="text"
+                      placeholder="أدخل المدينة أو المنطقة"
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                      className="border-0 bg-transparent text-foreground placeholder:text-gray-500 focus:outline-none text-sm"
+                      dir="rtl"
+                    />
+                  </div>
+                  <Input type="number" placeholder="السعر من" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
+                  <Input type="number" placeholder="السعر إلى" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
+                  <Button onClick={handleSearch} className="bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 h-12">
+                    <Search className="w-5 h-5" />
+                    بحث
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="new" className="mt-6">
+              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-5xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-3">
+                    <MapPin className="w-5 h-5 text-red-500 flex-shrink-0" />
+                    <Input
+                      type="text"
+                      placeholder="أدخل المدينة أو المنطقة"
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                      className="border-0 bg-transparent text-foreground placeholder:text-gray-500 focus:outline-none text-sm"
+                      dir="rtl"
+                    />
+                  </div>
+                  <Input type="number" placeholder="السعر من" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
+                  <Input type="number" placeholder="السعر إلى" className="bg-gray-100 border-0 rounded-lg" dir="rtl" />
+                  <Button onClick={handleSearch} className="bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 h-12">
+                    <Search className="w-5 h-5" />
+                    بحث
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
+
+      {/* Featured Properties */}
+      <section className="py-12 bg-gray-50">
+        <div className="container px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">أحدث العقارات</h2>
           <FeaturedPropertiesList />
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-secondary/10">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="card-elevated p-8 text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-primary" />
-              </div>
-              <h4 className="text-xl font-bold mb-2">بحث متقدم</h4>
-              <p className="text-muted-foreground">ابحث عن العقارات بسهولة باستخدام فلاتر متقدمة</p>
-            </div>
-
-            <div className="card-elevated p-8 text-center">
-              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <HomeIcon className="w-8 h-8 text-accent" />
-              </div>
-              <h4 className="text-xl font-bold mb-2">إعلانات موثوقة</h4>
-              <p className="text-muted-foreground">جميع الإعلانات موثوقة ومن مالكين حقيقيين</p>
-            </div>
-
-            <div className="card-elevated p-8 text-center">
-              <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Waves className="w-8 h-8 text-secondary" />
-              </div>
-              <h4 className="text-xl font-bold mb-2">اتصال مباشر</h4>
-              <p className="text-muted-foreground">تواصل مباشرة مع المعلنين عبر واتساب</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-sunset text-white">
-        <div className="container text-center">
-          <h3 className="text-4xl font-bold mb-4">هل لديك عقار للبيع أو الإيجار؟</h3>
-          <p className="text-xl mb-8 opacity-90">انضم إلى آلاف المعلنين الذين يستخدمون منصتنا</p>
-          <a href={isAuthenticated ? "/add-property" : getLoginUrl()}>
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90">
-              ابدأ الآن
-            </Button>
-          </a>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="bg-foreground text-white py-12">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <footer className="bg-foreground text-background py-12">
+        <div className="container px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h5 className="font-bold mb-4 flex items-center gap-2">
-                <Waves className="w-5 h-5" />
-                عقارات رأس البر
-              </h5>
+              <h5 className="font-bold mb-4">عقارات رأس البر</h5>
               <p className="text-sm opacity-70">منصة موثوقة للعقارات في رأس البر</p>
             </div>
             <div>
@@ -208,23 +225,18 @@ export default function Home() {
               <ul className="space-y-2 text-sm opacity-70">
                 <li><a href="/" className="hover:opacity-100">الرئيسية</a></li>
                 <li><a href="/properties" className="hover:opacity-100">العقارات</a></li>
-                <li><a href="/about" className="hover:opacity-100">عن الموقع</a></li>
               </ul>
             </div>
             <div>
               <h5 className="font-bold mb-4">المساعدة</h5>
               <ul className="space-y-2 text-sm opacity-70">
-                <li><a href="#" className="hover:opacity-100">الأسئلة الشائعة</a></li>
-                <li><a href="#" className="hover:opacity-100">التواصل</a></li>
-                <li><a href="#" className="hover:opacity-100">الشروط</a></li>
+                <li><span className="text-xs bg-accent/20 px-2 py-1 rounded">قريباً</span></li>
               </ul>
             </div>
             <div>
               <h5 className="font-bold mb-4">المتابعة</h5>
               <ul className="space-y-2 text-sm opacity-70">
-                <li><a href="#" className="hover:opacity-100">فيسبوك</a></li>
-                <li><a href="#" className="hover:opacity-100">تويتر</a></li>
-                <li><a href="#" className="hover:opacity-100">إنستجرام</a></li>
+                <li><span className="text-xs bg-accent/20 px-2 py-1 rounded">قريباً</span></li>
               </ul>
             </div>
           </div>
@@ -238,7 +250,7 @@ export default function Home() {
 }
 
 function FeaturedPropertiesList() {
-  const { data: properties, isLoading } = trpc.properties.list.useQuery({ });
+  const { data: properties, isLoading, error } = trpc.properties.list.useQuery({ });
 
   if (isLoading) {
     return (
@@ -246,6 +258,17 @@ function FeaturedPropertiesList() {
         {[1, 2, 3].map((i) => (
           <div key={i} className="bg-muted rounded-lg h-64 animate-pulse"></div>
         ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12 card-elevated">
+        <p className="text-destructive text-lg mb-4">حدث خطأ في تحميل الإعلانات</p>
+        <Button onClick={() => window.location.reload()} variant="outline">
+          إعادة المحاولة
+        </Button>
       </div>
     );
   }
@@ -262,23 +285,23 @@ function FeaturedPropertiesList() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {properties.slice(0, 6).map((property) => (
         <a key={property.id} href={`/property/${property.id}`} className="group">
-          <div className="card-elevated overflow-hidden h-full">
-            <div className="bg-gradient-coastal h-48 flex items-center justify-center text-white">
+          <div className="card-elevated overflow-hidden h-full hover:shadow-lg transition-shadow">
+            <div className="bg-gradient-coastal h-48 flex items-center justify-center text-white relative">
               <HomeIcon className="w-12 h-12 opacity-50" />
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                {property.operationType === 'sale' ? 'بيع' : 'إيجار'}
+              </div>
             </div>
             <div className="p-4">
-              <h4 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{property.title}</h4>
+              <h4 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">{property.title}</h4>
               <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{property.description}</p>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-primary font-bold">{property.price} ريال</span>
-                <span className="text-xs bg-accent/10 text-accent px-3 py-1 rounded-full">
-                  {property.operationType === 'sale' ? 'بيع' : 'إيجار'}
-                </span>
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-lg font-bold text-primary">{property.price.toLocaleString()} ريال</span>
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded">{property.location}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="w-4 h-4" />
-                <span>{property.location}</span>
-              </div>
+              {property.area && (
+                <p className="text-xs text-muted-foreground">المساحة: {property.area} م²</p>
+              )}
             </div>
           </div>
         </a>
