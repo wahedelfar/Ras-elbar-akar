@@ -24,53 +24,26 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      {/* Top Status Bar */}
-      <div className="bg-gray-900 text-white text-xs py-1 px-4 flex justify-between items-center">
-        <div className="flex gap-2">
-          <span>%0V</span>
-          <span>📶</span>
-          <span>📡</span>
-          <span>🔋</span>
-        </div>
-        <div className="flex gap-2">
-          <span>9:06</span>
-          <span>📞</span>
-          <span>👤</span>
-        </div>
-      </div>
-
-      {/* Promo Banner */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-4 flex justify-between items-center">
-        <button className="text-2xl">✕</button>
-        <div className="text-center flex-1">
-          <h3 className="font-bold">عقارات رأس البر</h3>
-          <div className="flex justify-center gap-1">
-            {[...Array(5)].map((_, i) => (
-              <span key={i} className="text-yellow-300">⭐</span>
-            ))}
-          </div>
-          <p className="text-sm">مجاني - 2.5 مليون تحميل</p>
-        </div>
-        <button className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold">تنزيل</button>
-      </div>
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
-        <div className="container px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-gray-100 rounded-lg">⋮</button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg">🏠</button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg">💬</button>
-            <div className="flex items-center gap-2 bg-gray-900 text-white px-3 py-2 rounded-full text-sm">
-              <span>🔍</span>
-              <span>raselbar.eg</span>
-            </div>
-            <button className="p-2 hover:bg-gray-100 rounded-lg">❤️</button>
+        <div className="container px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Waves className="w-8 h-8 text-blue-600" />
+            <span className="font-bold text-xl">عقارات رأس البر</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="font-bold text-red-500 text-lg">P</span>
-            <span className="font-bold text-lg">عقارات رأس البر</span>
-          </div>
+          <nav className="flex items-center gap-4">
+            <button onClick={() => setLocation("/properties")} className="text-gray-600 hover:text-primary font-medium">العقارات</button>
+            <button onClick={() => setLocation("/map")} className="text-gray-600 hover:text-primary font-medium">الخريطة</button>
+            {isAuthenticated ? (
+              <>
+                <button onClick={() => setLocation("/dashboard")} className="text-gray-600 hover:text-primary font-medium">لوحتي</button>
+                <button onClick={() => setLocation("/profile")} className="text-gray-600 hover:text-primary font-medium">حسابي</button>
+              </>
+            ) : (
+              <a href={getLoginUrl()} className="text-gray-600 hover:text-primary font-medium">دخول</a>
+            )}
+          </nav>
         </div>
       </header>
 
