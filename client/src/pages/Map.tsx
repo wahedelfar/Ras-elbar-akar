@@ -13,59 +13,69 @@ interface Area {
   type: "beach" | "residential" | "commercial" | "luxury";
 }
 
+// المناطق الحقيقية لرأس البر
 const areas: Area[] = [
   {
-    id: "main-beach",
-    name: "الشاطئ الرئيسي",
-    desc: "المنطقة الأكثر حيوية مع فنادق ومطاعم عالمية",
-    x: 50,
-    y: 30,
-    properties: 245,
-    type: "beach"
+    id: "kings-area",
+    name: "منطقة الملوك 👑",
+    desc: "من مسجد الرحمة للسان - أغلى منطقة في رأس البر بعقارات فاخرة جداً",
+    x: 85,
+    y: 15,
+    properties: 156,
+    type: "luxury"
   },
   {
-    id: "tourism",
-    name: "حي السياحة",
-    desc: "منطقة سكنية هادئة قريبة من الشاطئ",
+    id: "mercy-mosque",
+    name: "المنطقة من شارع 51 لمسجد الرحمة",
+    desc: "منطقة سكنية راقية مع عقارات متميزة",
+    x: 75,
+    y: 25,
+    properties: 134,
+    type: "residential"
+  },
+  {
+    id: "street-51",
+    name: "المنطقة من شارع 109 لشارع 51",
+    desc: "منطقة سكنية متوسطة الفخامة مع خدمات جيدة",
     x: 60,
-    y: 50,
+    y: 40,
     properties: 189,
     type: "residential"
   },
   {
-    id: "commercial",
-    name: "المنطقة التجارية",
-    desc: "مركز تجاري حديث مع متاجر وخدمات",
-    x: 40,
+    id: "urban-expansion",
+    name: "منطقة الإمتداد العمراني",
+    desc: "منطقة جديدة قيد التطوير مع مشاريع عمرانية حديثة",
+    x: 50,
     y: 55,
-    properties: 156,
-    type: "commercial"
-  },
-  {
-    id: "villas",
-    name: "حي الفيلات",
-    desc: "منطقة فاخرة للعقارات السكنية الراقية",
-    x: 70,
-    y: 70,
-    properties: 98,
-    type: "luxury"
-  },
-  {
-    id: "east",
-    name: "المنطقة الشرقية",
-    desc: "منطقة سكنية جديدة قيد التطوير",
-    x: 75,
-    y: 40,
-    properties: 142,
+    properties: 267,
     type: "residential"
   },
   {
-    id: "harbor",
-    name: "حي الميناء",
-    desc: "منطقة تاريخية مع إطلالات بحرية خلابة",
-    x: 30,
-    y: 35,
-    properties: 87,
+    id: "al-assi",
+    name: "منطقة العاصي",
+    desc: "من البوابة لكنتاكي - منطقة تجارية وسكنية نشطة",
+    x: 35,
+    y: 65,
+    properties: 198,
+    type: "commercial"
+  },
+  {
+    id: "consultants",
+    name: "منطقة المستشارين",
+    desc: "منطقة سكنية هادئة بعيدة عن الازدحام",
+    x: 20,
+    y: 50,
+    properties: 112,
+    type: "residential"
+  },
+  {
+    id: "beach",
+    name: "الشاطئ الرئيسي",
+    desc: "الواجهة البحرية الساحرة مع فنادق ومطاعم",
+    x: 50,
+    y: 10,
+    properties: 89,
     type: "beach"
   }
 ];
@@ -78,10 +88,10 @@ const typeColors = {
 };
 
 const typeLabels = {
-  beach: "شاطئي",
-  residential: "سكني",
-  commercial: "تجاري",
-  luxury: "فاخر"
+  beach: "🌊 شاطئي",
+  residential: "🏠 سكني",
+  commercial: "🏪 تجاري",
+  luxury: "👑 فاخر"
 };
 
 export default function Map() {
@@ -92,242 +102,154 @@ export default function Map() {
     setSelectedArea(area);
   };
 
-  const handleSearch = (area: Area) => {
-    setLocation(`/properties?location=${encodeURIComponent(area.name)}`);
+  const handleSearchByArea = (areaName: string) => {
+    setLocation(`/properties?location=${encodeURIComponent(areaName)}`);
   };
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
-        <div className="container px-4 py-3 flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={() => setLocation("/")}
-          >
-            ← العودة
-          </Button>
-          <h1 className="font-bold text-xl flex items-center gap-2">
-            <Waves className="w-6 h-6" />
-            خريطة مناطق رأس البر
-          </h1>
-          <div className="w-20"></div>
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-slate-900 to-slate-800 shadow-2xl border-b border-yellow-500/20">
+        <div className="container px-4 py-4 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center shadow-lg">
+              <Waves className="w-6 h-6 text-white" />
+            </div>
+            <span className="font-bold text-xl bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">عقارات رأس البر</span>
+          </a>
+          <a href="/">
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold">العودة</Button>
+          </a>
         </div>
       </header>
 
       <div className="container px-4 py-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">خريطة مناطق رأس البر</h1>
+          <p className="text-gray-300 text-lg">اختر منطقة لاستكشاف العقارات المتاحة</p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Map Container */}
+          {/* Map Section */}
           <div className="lg:col-span-2">
-            <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl overflow-hidden shadow-lg relative" style={{ aspectRatio: "16/10" }}>
-              {/* SVG Background */}
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                {/* Water effect */}
-                <defs>
-                  <pattern id="water" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <circle cx="10" cy="10" r="2" fill="rgba(59, 130, 246, 0.1)" />
-                  </pattern>
-                </defs>
-                <rect width="100" height="100" fill="url(#water)" />
-                
-                {/* Coastline */}
-                <path d="M 0 20 Q 25 15 50 25 T 100 20 L 100 0 L 0 0 Z" fill="rgba(59, 130, 246, 0.2)" />
-                
-                {/* Grid */}
-                <g stroke="rgba(59, 130, 246, 0.1)" strokeWidth="0.5">
-                  {[...Array(10)].map((_, i) => (
-                    <line key={`h${i}`} x1="0" y1={i * 10} x2="100" y2={i * 10} />
-                  ))}
-                  {[...Array(10)].map((_, i) => (
-                    <line key={`v${i}`} x1={i * 10} y1="0" x2={i * 10} y2="100" />
-                  ))}
-                </g>
-              </svg>
+            <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl shadow-2xl p-6 border border-yellow-500/20">
+              <div className="relative w-full aspect-square md:aspect-[4/3] bg-gradient-to-br from-blue-900/30 to-slate-800 rounded-xl overflow-hidden border-2 border-yellow-500/30">
+                {/* Map Background - Simplified representation */}
+                <div className="absolute inset-0">
+                  <svg viewBox="0 0 100 100" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
+                    {/* Sea */}
+                    <rect width="100" height="100" fill="#1e3a5f" opacity="0.3" />
+                    {/* Coastline */}
+                    <path d="M 100 0 L 100 100 L 95 100 L 95 0" stroke="#fbbf24" strokeWidth="2" fill="none" />
+                    {/* Grid */}
+                    <g stroke="#fbbf24" strokeWidth="0.5" opacity="0.2">
+                      <line x1="0" y1="25" x2="100" y2="25" />
+                      <line x1="0" y1="50" x2="100" y2="50" />
+                      <line x1="0" y1="75" x2="100" y2="75" />
+                      <line x1="25" y1="0" x2="25" y2="100" />
+                      <line x1="50" y1="0" x2="50" y2="100" />
+                      <line x1="75" y1="0" x2="75" y2="100" />
+                    </g>
+                  </svg>
+                </div>
 
-              {/* Areas Markers */}
-              <div className="absolute inset-0">
-                {areas.map((area) => (
-                  <button
-                    key={area.id}
-                    onClick={() => handleAreaClick(area)}
-                    className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all hover:scale-125 ${
-                      selectedArea?.id === area.id ? "scale-125" : "scale-100"
-                    }`}
-                    style={{ left: `${area.x}%`, top: `${area.y}%` }}
-                    title={area.name}
-                  >
-                    <div className={`${typeColors[area.type]} rounded-full p-3 shadow-lg hover:shadow-xl text-white font-bold text-sm flex items-center justify-center w-12 h-12 cursor-pointer`}>
-                      <MapPin className="w-6 h-6" />
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+                {/* Area Markers */}
+                <div className="absolute inset-0">
+                  {areas.map((area) => (
+                    <button
+                      key={area.id}
+                      onClick={() => handleAreaClick(area)}
+                      className={`absolute w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs cursor-pointer transition-all transform hover:scale-125 ${typeColors[area.type]} hover:shadow-lg shadow-md`}
+                      style={{
+                        left: `${area.x}%`,
+                        top: `${area.y}%`,
+                        transform: "translate(-50%, -50%)"
+                      }}
+                      title={area.name}
+                    >
+                      {area.properties}
+                    </button>
+                  ))}
+                </div>
 
-            {/* Legend */}
-            <div className="mt-6 bg-white rounded-lg shadow p-6">
-              <h3 className="font-bold mb-4">وسيلة الإيضاح</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {Object.entries(typeLabels).map(([type, label]) => (
-                  <div key={type} className="flex items-center gap-2">
-                    <div className={`${typeColors[type as keyof typeof typeColors]} w-4 h-4 rounded-full`}></div>
-                    <span className="text-sm">{label}</span>
+                {/* Legend */}
+                <div className="absolute bottom-4 left-4 bg-slate-900/90 rounded-lg p-3 backdrop-blur-sm border border-yellow-500/30">
+                  <p className="text-xs font-bold text-yellow-400 mb-2">المناطق:</p>
+                  <div className="space-y-1 text-xs">
+                    {Object.entries(typeLabels).map(([type, label]) => (
+                      <div key={type} className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${typeColors[type as keyof typeof typeColors]}`}></div>
+                        <span className="text-gray-300">{label}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+              </div>
+
+              {/* Map Info */}
+              <div className="mt-6 bg-slate-600/30 rounded-lg p-4 border border-yellow-500/20">
+                <p className="text-sm text-gray-300">
+                  💡 <strong>تلميح:</strong> انقر على أي منطقة في الخريطة لعرض التفاصيل والعقارات المتاحة
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Sidebar - Area Details */}
-          <div className="lg:col-span-1">
-            {selectedArea ? (
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden sticky top-24">
-                <div className={`${typeColors[selectedArea.type]} text-white p-6`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h2 className="text-2xl font-bold">{selectedArea.name}</h2>
-                      <p className="text-sm opacity-90 mt-1">{typeLabels[selectedArea.type]}</p>
-                    </div>
-                    <button
-                      onClick={() => setSelectedArea(null)}
-                      className="p-1 hover:bg-white/20 rounded"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-6">
-                  {/* Description */}
+          {/* Areas List & Details */}
+          <div className="space-y-4">
+            {/* Selected Area Details */}
+            {selectedArea && (
+              <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/10 rounded-xl p-6 border-2 border-yellow-500/50 shadow-lg">
+                <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="font-bold text-sm text-gray-600 mb-2">الوصف</h3>
-                    <p className="text-gray-700 text-sm leading-relaxed">
-                      {selectedArea.desc}
-                    </p>
+                    <h3 className="text-2xl font-bold text-yellow-300 mb-2">{selectedArea.name}</h3>
+                    <p className="text-gray-300 text-sm mb-4">{selectedArea.desc}</p>
                   </div>
-
-                  {/* Stats */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-gray-600 text-sm">عدد العقارات</span>
-                      <span className="font-bold text-2xl text-primary">{selectedArea.properties}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className={`${typeColors[selectedArea.type]} h-2 rounded-full`}
-                        style={{ width: `${(selectedArea.properties / 245) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  {/* Features */}
-                  <div>
-                    <h3 className="font-bold text-sm text-gray-600 mb-3">الميزات</h3>
-                    <ul className="space-y-2 text-sm">
-                      {selectedArea.type === "beach" && (
-                        <>
-                          <li className="flex items-center gap-2">
-                            <span className="text-blue-500">🌊</span>
-                            <span>إطلالات بحرية خلابة</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-yellow-500">☀️</span>
-                            <span>شواطئ رملية ذهبية</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-green-500">🏖️</span>
-                            <span>أنشطة سياحية متنوعة</span>
-                          </li>
-                        </>
-                      )}
-                      {selectedArea.type === "residential" && (
-                        <>
-                          <li className="flex items-center gap-2">
-                            <span className="text-green-500">🏠</span>
-                            <span>منطقة سكنية هادئة</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-blue-500">🌳</span>
-                            <span>مساحات خضراء</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-purple-500">👨‍👩‍👧‍👦</span>
-                            <span>مناسبة للعائلات</span>
-                          </li>
-                        </>
-                      )}
-                      {selectedArea.type === "commercial" && (
-                        <>
-                          <li className="flex items-center gap-2">
-                            <span className="text-orange-500">🏪</span>
-                            <span>متاجر وخدمات</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-red-500">🍽️</span>
-                            <span>مطاعم وكافيهات</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-blue-500">🚗</span>
-                            <span>مواقف سيارات</span>
-                          </li>
-                        </>
-                      )}
-                      {selectedArea.type === "luxury" && (
-                        <>
-                          <li className="flex items-center gap-2">
-                            <span className="text-purple-500">👑</span>
-                            <span>عقارات فاخرة</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-gold-500">✨</span>
-                            <span>خدمات عالية الجودة</span>
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="text-blue-500">🏊</span>
-                            <span>مرافق حصرية</span>
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                  </div>
-
-                  {/* Action Button */}
-                  <Button
-                    onClick={() => handleSearch(selectedArea)}
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-lg"
+                  <button
+                    onClick={() => setSelectedArea(null)}
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
                   >
-                    ابحث عن عقارات في {selectedArea.name}
-                  </Button>
+                    <X className="w-6 h-6" />
+                  </button>
                 </div>
-              </div>
-            ) : (
-              <div className="bg-white rounded-xl shadow-lg p-8 text-center sticky top-24">
-                <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600 font-medium mb-2">اختر منطقة على الخريطة</p>
-                <p className="text-gray-500 text-sm">
-                  انقر على أي منطقة لعرض التفاصيل والعقارات المتاحة
-                </p>
+
+                <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-yellow-500/30">
+                  <div>
+                    <p className="text-gray-400 text-xs">النوع</p>
+                    <p className="text-yellow-300 font-bold">{typeLabels[selectedArea.type]}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-xs">عدد العقارات</p>
+                    <p className="text-yellow-300 font-bold">{selectedArea.properties}</p>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => handleSearchByArea(selectedArea.name)}
+                  className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 font-bold py-2 rounded-lg shadow-lg"
+                >
+                  <MapPin className="w-4 h-4 ml-2" />
+                  البحث عن العقارات
+                </Button>
               </div>
             )}
 
             {/* All Areas List */}
-            <div className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                <h3 className="font-bold">جميع المناطق</h3>
-              </div>
-              <div className="divide-y divide-gray-200">
+            <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl shadow-lg p-6 border border-yellow-500/20">
+              <h3 className="text-lg font-bold text-yellow-300 mb-4">جميع المناطق</h3>
+              <div className="space-y-3 max-h-96 overflow-y-auto">
                 {areas.map((area) => (
                   <button
                     key={area.id}
                     onClick={() => handleAreaClick(area)}
-                    className={`w-full text-right px-6 py-3 hover:bg-gray-50 transition-colors ${
-                      selectedArea?.id === area.id ? "bg-blue-50 border-r-4 border-primary" : ""
+                    className={`w-full text-right p-3 rounded-lg border-2 transition-all ${
+                      selectedArea?.id === area.id
+                        ? "border-yellow-500 bg-yellow-500/20"
+                        : "border-yellow-500/30 bg-slate-600/30 hover:bg-slate-600/50 hover:border-yellow-500/50"
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">{area.name}</span>
-                      <span className="text-xs bg-gray-100 px-2 py-1 rounded">{area.properties}</span>
-                    </div>
+                    <p className="font-bold text-yellow-300 text-sm">{area.name}</p>
+                    <p className="text-gray-400 text-xs mt-1">{area.properties} عقار</p>
                   </button>
                 ))}
               </div>

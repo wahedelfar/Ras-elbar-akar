@@ -79,7 +79,7 @@ export default function UserDashboard() {
                       </div>
                       <div>
                         <p className="text-muted-foreground">السعر</p>
-                        <p className="font-semibold">{property.price} ريال</p>
+                        <p className="font-semibold">{property.price.toLocaleString()} ج.م</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">الموقع</p>

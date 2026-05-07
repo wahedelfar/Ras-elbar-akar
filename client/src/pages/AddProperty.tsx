@@ -92,9 +92,9 @@ export default function AddProperty() {
     setIsSubmitting(true);
 
     try {
-      const fullPhoneNumber = `${countryCode}${phoneNumber.replace(/^\+?\d+/, "")}`;
+      const fullPhoneNumber = `${countryCode}${phoneNumber.replace(/^\+?\d+/, "").trim()}`;
       const fullWhatsappNumber = whatsappNumber 
-        ? `${countryCode}${whatsappNumber.replace(/^\+?\d+/, "")}`
+        ? `${countryCode}${whatsappNumber.replace(/^\+?\d+/, "").trim()}`
         : fullPhoneNumber;
 
       const propertyResult = await createProperty.mutateAsync({

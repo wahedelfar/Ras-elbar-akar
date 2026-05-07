@@ -200,7 +200,7 @@ export default function Properties() {
                           </p>
                           <div className="space-y-3 border-t border-border pt-3">
                             <div className="flex items-center justify-between">
-                              <span className="text-primary font-bold text-lg">{property.price} ريال</span>
+                              <span className="text-primary font-bold text-lg">{property.price.toLocaleString()} ج.م</span>
                               {property.area && (
                                 <span className="text-sm text-muted-foreground">{property.area} م²</span>
                               )}
