@@ -236,7 +236,7 @@ export default function Home() {
                       </a>
                       {property.whatsappNumber && (
                         <a
-                          href={`https://wa.me/${property.whatsappNumber.replace(/\D/g, '')}`}
+                          href={`https://wa.me/${property.whatsappNumber.replace(/[^0-9]/g, '')}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors"
