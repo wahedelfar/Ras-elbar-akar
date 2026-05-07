@@ -92,9 +92,13 @@ export default function AddProperty() {
     setIsSubmitting(true);
 
     try {
-      const fullPhoneNumber = `${countryCode}${phoneNumber.replace(/^\+?\d+/, "").trim()}`;
-      const fullWhatsappNumber = whatsappNumber 
-        ? `${countryCode}${whatsappNumber.replace(/^\+?\d+/, "").trim()}`
+      // إزالة أي مسافات وعلامات خاصة من الأرقام
+      const cleanPhone = phoneNumber.replace(/\D/g, "").trim();
+      const cleanWhatsapp = whatsappNumber ? whatsappNumber.replace(/\D/g, "").trim() : "";
+      
+      const fullPhoneNumber = `${countryCode}${cleanPhone}`;
+      const fullWhatsappNumber = cleanWhatsapp 
+        ? `${countryCode}${cleanWhatsapp}`
         : fullPhoneNumber;
 
       const propertyResult = await createProperty.mutateAsync({
