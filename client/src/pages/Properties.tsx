@@ -7,20 +7,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, Home as HomeIcon, Waves, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Properties() {
-  const [location] = useLocation();
-  const searchParams = new URLSearchParams(location.split("?")[1] || "");
-  
-  const [type, setType] = useState(searchParams.get("type") || "");
-  const [operationType, setOperationType] = useState(searchParams.get("operationType") || "");
-  const [searchLocation, setSearchLocation] = useState(searchParams.get("location") || "");
+  const [, setLocation] = useLocation();
+  const [type, setType] = useState("");
+  const [operationType, setOperationType] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [page, setPage] = useState(1);
 
-  const { data: properties, isLoading } = trpc.properties.list.useQuery({
+  const { data: properties = [], isLoading } = trpc.properties.list.useQuery({
     type: type || undefined,
-    operationType: operationType as "sale" | "rent" | undefined,
+    operationType: (operationType as "sale" | "rent") || undefined,
     location: searchLocation || undefined,
     minPrice: minPrice ? parseInt(minPrice) : undefined,
     maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
@@ -30,9 +28,9 @@ export default function Properties() {
   const sortedProperties = properties ? [...properties].sort((a, b) => {
     switch (sortBy) {
       case "price-asc":
-        return parseFloat(a.price) - parseFloat(b.price);
+        return parseFloat(a.price.toString()) - parseFloat(b.price.toString());
       case "price-desc":
-        return parseFloat(b.price) - parseFloat(a.price);
+        return parseFloat(b.price.toString()) - parseFloat(a.price.toString());
       case "newest":
       default:
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -43,45 +41,51 @@ export default function Properties() {
   const totalPages = Math.ceil(sortedProperties.length / itemsPerPage);
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-border">
-        <div className="container flex items-center justify-between h-20">
-          <a href="/" className="flex items-center gap-2 text-primary hover:text-primary/80">
-            <Waves className="w-8 h-8" />
-            <span className="font-bold text-xl">عقارات رأس البر</span>
-          </a>
-          <a href="/">
-            <Button variant="outline">العودة للرئيسية</Button>
-          </a>
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-slate-900 to-slate-800 shadow-2xl border-b border-yellow-500/20">
+        <div className="container px-4 py-4 flex items-center justify-between">
+          <button onClick={() => setLocation("/")} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center shadow-lg">
+              <Waves className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <span className="font-bold text-xl bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">عقارات رأس البر</span>
+              <p className="text-xs text-yellow-400/60">الخيار الأول للعقارات الفاخرة</p>
+            </div>
+          </button>
+          <button onClick={() => setLocation("/")} className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold rounded-lg transition-all">
+            العودة للرئيسية
+          </button>
         </div>
       </header>
 
-      <div className="container py-8">
-        <h1 className="text-4xl font-bold mb-8">البحث عن العقارات</h1>
+      <div className="container px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8 text-white">البحث عن العقارات</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Filters */}
           <div className="lg:col-span-1">
-            <div className="card-elevated p-6 space-y-6 sticky top-24">
-              <h3 className="font-bold text-lg">الفلاتر</h3>
+            <div className="bg-slate-800 border border-yellow-500/20 p-6 space-y-6 sticky top-24 rounded-lg">
+              <h3 className="font-bold text-lg text-white">الفلاتر</h3>
 
               {/* Location */}
               <div>
-                <label className="block text-sm font-semibold mb-2">الموقع</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-300">الموقع</label>
                 <Input
                   placeholder="ابحث عن موقع"
                   value={searchLocation}
                   onChange={(e) => setSearchLocation(e.target.value)}
                   dir="rtl"
+                  className="bg-slate-700 border-slate-600 text-white"
                 />
               </div>
 
               {/* Property Type */}
               <div>
-                <label className="block text-sm font-semibold mb-2">نوع العقار</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-300">نوع العقار</label>
                 <Select value={type} onValueChange={setType}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                     <SelectValue placeholder="اختر النوع" />
                   </SelectTrigger>
                   <SelectContent>
@@ -97,9 +101,9 @@ export default function Properties() {
 
               {/* Operation Type */}
               <div>
-                <label className="block text-sm font-semibold mb-2">نوع العملية</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-300">نوع العملية</label>
                 <Select value={operationType} onValueChange={setOperationType}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                     <SelectValue placeholder="اختر النوع" />
                   </SelectTrigger>
                   <SelectContent>
@@ -112,28 +116,30 @@ export default function Properties() {
 
               {/* Price Range */}
               <div>
-                <label className="block text-sm font-semibold mb-2">نطاق السعر</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-300">نطاق السعر</label>
                 <div className="space-y-2">
                   <Input
                     type="number"
                     placeholder="السعر الأدنى"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
                   />
                   <Input
                     type="number"
                     placeholder="السعر الأعلى"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
               </div>
 
               {/* Sort */}
               <div>
-                <label className="block text-sm font-semibold mb-2">الترتيب</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-300">الترتيب</label>
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -151,9 +157,9 @@ export default function Properties() {
                   setSearchLocation("");
                   setMinPrice("");
                   setMaxPrice("");
+                  setPage(1);
                 }}
-                variant="outline"
-                className="w-full"
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold"
               >
                 مسح الفلاتر
               </Button>
@@ -165,54 +171,58 @@ export default function Properties() {
             {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-muted rounded-lg h-96 animate-pulse"></div>
+                  <div key={i} className="bg-slate-700 rounded-lg h-96 animate-pulse"></div>
                 ))}
               </div>
             ) : paginatedProperties.length === 0 ? (
-              <div className="text-center py-12 card-elevated">
-                <HomeIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <p className="text-lg text-muted-foreground">لا توجد عقارات تطابق معايير البحث</p>
+              <div className="text-center py-12 bg-slate-800 border border-yellow-500/20 rounded-lg">
+                <HomeIcon className="w-16 h-16 text-yellow-400/50 mx-auto mb-4" />
+                <p className="text-lg text-gray-300">لا توجد عقارات تطابق معايير البحث</p>
               </div>
             ) : (
               <>
                 <div className="mb-6 flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">
-                    عدد النتائج: <span className="font-bold">{sortedProperties.length}</span>
+                  <p className="text-sm text-gray-300">
+                    عدد النتائج: <span className="font-bold text-yellow-400">{sortedProperties.length}</span>
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   {paginatedProperties.map((property) => (
-                    <a key={property.id} href={`/property/${property.id}`} className="group">
-                      <div className="card-elevated overflow-hidden h-full flex flex-col hover:shadow-xl transition-shadow">
-                        <div className="bg-gradient-coastal h-48 flex items-center justify-center text-white relative overflow-hidden">
+                    <button
+                      key={property.id}
+                      onClick={() => setLocation(`/property/${property.id}`)}
+                      className="group text-left hover:opacity-90 transition-opacity"
+                    >
+                      <div className="bg-slate-800 border border-yellow-500/20 overflow-hidden h-full flex flex-col rounded-lg hover:shadow-2xl transition-shadow hover:border-yellow-500/50">
+                        <div className="bg-gradient-to-br from-blue-600 to-blue-800 h-48 flex items-center justify-center text-white relative overflow-hidden">
                           <HomeIcon className="w-12 h-12 opacity-30" />
-                          <div className="absolute top-3 right-3 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                          <div className="absolute top-3 right-3 bg-yellow-500 text-slate-900 px-3 py-1 rounded-full text-xs font-semibold">
                             {property.operationType === 'sale' ? 'بيع' : 'إيجار'}
                           </div>
                         </div>
                         <div className="p-4 flex-1 flex flex-col">
-                          <h4 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                          <h4 className="font-bold text-lg mb-2 group-hover:text-yellow-400 transition-colors line-clamp-2 text-white">
                             {property.title}
                           </h4>
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-1">
+                          <p className="text-sm text-gray-400 mb-4 line-clamp-2 flex-1">
                             {property.description}
                           </p>
-                          <div className="space-y-3 border-t border-border pt-3">
+                          <div className="space-y-3 border-t border-slate-700 pt-3">
                             <div className="flex items-center justify-between">
-                              <span className="text-primary font-bold text-lg">{property.price.toLocaleString()} ج.م</span>
+                              <span className="text-yellow-400 font-bold text-lg">{property.price.toLocaleString()} ج.م</span>
                               {property.area && (
-                                <span className="text-sm text-muted-foreground">{property.area} م²</span>
+                                <span className="text-sm text-gray-400">{property.area} م²</span>
                               )}
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 text-sm text-gray-400">
                               <MapPin className="w-4 h-4 flex-shrink-0" />
                               <span className="line-clamp-1">{property.location}</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </a>
+                    </button>
                   ))}
                 </div>
 
@@ -224,6 +234,7 @@ export default function Properties() {
                       size="sm"
                       onClick={() => setPage(Math.max(1, page - 1))}
                       disabled={page === 1}
+                      className="bg-slate-800 border-yellow-500/20 text-white hover:bg-slate-700"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </Button>
@@ -233,6 +244,7 @@ export default function Properties() {
                         variant={page === p ? "default" : "outline"}
                         size="sm"
                         onClick={() => setPage(p)}
+                        className={page === p ? "bg-yellow-500 text-slate-900" : "bg-slate-800 border-yellow-500/20 text-white hover:bg-slate-700"}
                       >
                         {p}
                       </Button>
@@ -242,6 +254,7 @@ export default function Properties() {
                       size="sm"
                       onClick={() => setPage(Math.min(totalPages, page + 1))}
                       disabled={page === totalPages}
+                      className="bg-slate-800 border-yellow-500/20 text-white hover:bg-slate-700"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </Button>

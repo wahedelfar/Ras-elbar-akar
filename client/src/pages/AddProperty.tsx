@@ -9,18 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Waves, Upload, Loader2, X, ExternalLink, Info } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
-// Country codes for WhatsApp
+// Country codes for WhatsApp - مصر فقط
 const COUNTRY_CODES = [
   { code: "+20", country: "مصر 🇪🇬" },
-  { code: "+966", country: "السعودية 🇸🇦" },
-  { code: "+971", country: "الإمارات 🇦🇪" },
-  { code: "+965", country: "الكويت 🇰🇼" },
-  { code: "+974", country: "قطر 🇶🇦" },
-  { code: "+973", country: "البحرين 🇧🇭" },
-  { code: "+968", country: "عمان 🇴🇲" },
-  { code: "+212", country: "المغرب 🇲🇦" },
-  { code: "+216", country: "تونس 🇹🇳" },
-  { code: "+213", country: "الجزائر 🇩🇿" },
 ];
 
 // Free image hosting sites
@@ -43,7 +34,7 @@ export default function AddProperty() {
   const [area, setArea] = useState("");
   const [location, setPropertyLocation] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setCountryCode] = useState("+20");
+  const [countryCode] = useState("+20"); // مصر فقط
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -266,18 +257,9 @@ export default function AddProperty() {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-semibold mb-2 text-yellow-300">مفتاح الدولة *</label>
-                <Select value={countryCode} onValueChange={setCountryCode}>
-                  <SelectTrigger className="bg-slate-600/50 border border-yellow-500/30 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border border-yellow-500/30 max-h-60">
-                    {COUNTRY_CODES.map((item) => (
-                      <SelectItem key={item.code} value={item.code} className="text-white">
-                        {item.country}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="bg-slate-600/50 border border-yellow-500/30 text-white px-3 py-2 rounded-md flex items-center">
+                  <span className="text-white font-semibold">{countryCode} - مصر</span>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2 text-yellow-300">رقم الهاتف *</label>
