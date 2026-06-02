@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
 import AddProperty from "./pages/AddProperty";
+import EditProperty from "./pages/EditProperty";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
@@ -32,6 +33,7 @@ function Router() {
       <Route path={"/properties"} component={Properties} />
       <Route path={"/property/:id"} component={PropertyDetail} />
       <Route path={"/add-property"} component={AddProperty} />
+      <Route path={"/edit-property/:id"} component={EditProperty} />
       <Route path={"/dashboard"} component={UserDashboard} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/profile"} component={Profile} />
