@@ -15,6 +15,13 @@
       "when": 1777859918069,
       "tag": "0001_supreme_fat_cobra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1780473217819,
+      "tag": "0002_quick_kingpin",
+      "breakpoints": true
     }
   ]
 }

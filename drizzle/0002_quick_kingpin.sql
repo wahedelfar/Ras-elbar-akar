@@ -1,0 +1,1 @@
+ALTER TABLE `propertyImages` MODIFY COLUMN `imageKey` varchar(255) NOT NULL DEFAULT '';

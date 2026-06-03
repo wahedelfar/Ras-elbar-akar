@@ -70,7 +70,7 @@ export default function Home() {
         backgroundImage: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.85)), url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22%3E%3Crect fill=%22%230f172a%22 width=%221200%22 height=%22600%22/%3E%3C/svg%3E")'
       }}>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
-          <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">البحث عن المنازل الفاخرة</h2>
+          <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">ابحث عن عقارك</h2>
           <p className="text-lg md:text-xl opacity-80 mb-8 text-gray-200">اكتشف أرقى العقارات للشراء أو الاستئجار في رأس البر</p>
           <div className="flex gap-4">
             <button onClick={() => setLocation("/properties")} className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold rounded-lg transition-all shadow-lg">استعرض العقارات</button>
@@ -83,7 +83,7 @@ export default function Home() {
       <section className="bg-gradient-to-b from-slate-900 to-slate-800 py-12 px-4">
         <div className="container mx-auto">
           <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-2xl p-8 shadow-2xl border border-yellow-500/20">
-            <h3 className="text-2xl font-bold text-yellow-400 mb-6 text-center">ابحث عن عقارك المثالي</h3>
+            <h3 className="text-2xl font-bold text-yellow-400 mb-6 text-center">ابحث عن عقارك سواء تمليك أو إيجار</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Type Filter */}

@@ -90,17 +90,23 @@ export default function EditProperty() {
     setIsSubmitting(true);
 
     try {
+      const cleanPhone = formData.phoneNumber.replace(/\D/g, "").trim();
+      const cleanWhatsapp = formData.whatsappNumber ? formData.whatsappNumber.replace(/\D/g, "").trim() : "";
+      
+      const fullPhoneNumber = `+20${cleanPhone}`;
+      const fullWhatsappNumber = cleanWhatsapp ? `+20${cleanWhatsapp}` : fullPhoneNumber;
+
       updateProperty.mutate({
         id: propertyId || 0,
         title: formData.title,
         description: formData.description,
         type: formData.type,
-        operationType: "sale",
+        operationType: formData.operationType,
         price: parseInt(formData.price),
         area: formData.area ? parseInt(formData.area) : undefined,
         location: formData.location,
-        phoneNumber: formData.phoneNumber,
-        whatsappNumber: formData.whatsappNumber,
+        phoneNumber: fullPhoneNumber,
+        whatsappNumber: fullWhatsappNumber,
       });
     } finally {
       setIsSubmitting(false);

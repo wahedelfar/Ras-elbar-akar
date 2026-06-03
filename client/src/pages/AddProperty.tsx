@@ -43,6 +43,7 @@ export default function AddProperty() {
 
   const createProperty = trpc.properties.create.useMutation();
   const uploadImage = trpc.propertyImages.upload.useMutation();
+  const addExternalImage = trpc.propertyImages.addExternalUrl.useMutation();
 
   if (!isAuthenticated) {
     return (
@@ -123,7 +124,15 @@ export default function AddProperty() {
         reader.readAsDataURL(image);
       }
 
-      // Note: URL-based images can be added as external links in the future
+      // Add external image URLs
+      for (const url of imageUrls) {
+        if (propertyId) {
+          await addExternalImage.mutateAsync({
+            propertyId: propertyId,
+            imageUrl: url,
+          });
+        }
+      }
 
       setLocation("/dashboard");
     } catch (error) {

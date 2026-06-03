@@ -17,8 +17,8 @@ export default function Properties() {
   const [page, setPage] = useState(1);
 
   const { data: properties = [], isLoading } = trpc.properties.list.useQuery({
-    type: type || undefined,
-    operationType: (operationType as "sale" | "rent") || undefined,
+    type: type && type !== "all" ? type : undefined,
+    operationType: (operationType && operationType !== "all" ? operationType : undefined) as "sale" | "rent" | undefined,
     location: searchLocation || undefined,
     minPrice: minPrice ? parseInt(minPrice) : undefined,
     maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
@@ -89,7 +89,7 @@ export default function Properties() {
                     <SelectValue placeholder="اختر النوع" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">الكل</SelectItem>
+                    <SelectItem value="all">الكل</SelectItem>
                     <SelectItem value="apartment">شقة</SelectItem>
                     <SelectItem value="villa">فيلا</SelectItem>
                     <SelectItem value="house">منزل</SelectItem>
@@ -107,7 +107,7 @@ export default function Properties() {
                     <SelectValue placeholder="اختر النوع" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">الكل</SelectItem>
+                    <SelectItem value="all">الكل</SelectItem>
                     <SelectItem value="sale">بيع</SelectItem>
                     <SelectItem value="rent">إيجار</SelectItem>
                   </SelectContent>

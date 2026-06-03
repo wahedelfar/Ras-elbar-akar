@@ -197,6 +197,32 @@ export const appRouter = router({
         return db.getPropertyImages(input);
       }),
 
+    // Add external image URL
+    addExternalUrl: protectedProcedure
+      .input(z.object({
+        propertyId: z.number(),
+        imageUrl: z.string().url(),
+        order: z.number().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (!ctx.user) throw new Error("Not authenticated");
+
+        const property = await db.getPropertyById(input.propertyId);
+        if (!property || property.userId !== ctx.user.id) {
+          throw new Error("Not authorized");
+        }
+
+        // Save external URL with empty imageKey
+        const image = await db.addPropertyImage({
+          propertyId: input.propertyId,
+          imageUrl: input.imageUrl,
+          imageKey: "",
+          order: input.order || 0,
+        });
+
+        return image;
+      }),
+
     // Upload image for property
     upload: protectedProcedure
       .input(z.object({

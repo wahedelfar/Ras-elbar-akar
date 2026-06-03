@@ -89,7 +89,7 @@ export const propertyImages = mysqlTable(
     id: int("id").autoincrement().primaryKey(),
     propertyId: int("propertyId").notNull(),
     imageUrl: text("imageUrl").notNull(),
-    imageKey: varchar("imageKey", { length: 255 }).notNull(),
+    imageKey: varchar("imageKey", { length: 255 }).notNull().default(""),
     order: int("order").default(0),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },

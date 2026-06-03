@@ -147,7 +147,7 @@ export default function PropertyDetail() {
             <div className="card-elevated p-8 mb-6 text-center">
               <p className="text-sm text-muted-foreground mb-2">السعر</p>
               <p className="text-5xl font-bold text-primary mb-4">{property.price}</p>
-              <p className="text-muted-foreground">ريال سعودي</p>
+              <p className="text-muted-foreground">ج.م</p>
             </div>
 
             {/* Contact Card */}
