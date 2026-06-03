@@ -196,7 +196,15 @@ export default function Properties() {
                     >
                       <div className="bg-slate-800 border border-yellow-500/20 overflow-hidden h-full flex flex-col rounded-lg hover:shadow-2xl transition-shadow hover:border-yellow-500/50">
                         <div className="bg-gradient-to-br from-blue-600 to-blue-800 h-48 flex items-center justify-center text-white relative overflow-hidden">
-                          <HomeIcon className="w-12 h-12 opacity-30" />
+                          {(property as any).images && (property as any).images.length > 0 ? (
+                            <img
+                              src={(property as any).images[0].imageUrl}
+                              alt={property.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                          ) : (
+                            <HomeIcon className="w-12 h-12 opacity-30" />
+                          )}
                           <div className="absolute top-3 right-3 bg-yellow-500 text-slate-900 px-3 py-1 rounded-full text-xs font-semibold">
                             {property.operationType === 'sale' ? 'بيع' : 'إيجار'}
                           </div>

@@ -55,7 +55,14 @@ export const appRouter = router({
         maxArea: z.number().optional(),
       }).optional())
       .query(async ({ input }) => {
-        return db.getActiveProperties(input);
+        const propertyList = await db.getActiveProperties(input);
+        const propertiesWithImages = await Promise.all(
+          propertyList.map(async (property) => {
+            const images = await db.getPropertyImages(property.id);
+            return { ...property, images };
+          })
+        );
+        return propertiesWithImages;
       }),
 
     // Get property details

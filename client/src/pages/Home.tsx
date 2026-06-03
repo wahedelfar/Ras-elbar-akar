@@ -145,9 +145,17 @@ export default function Home() {
                 <div key={property.id} className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all border border-yellow-500/20 hover:border-yellow-400/50 cursor-pointer" onClick={() => setLocation(`/property/${property.id}`)}>
                   {/* Image */}
                   <div className="h-48 bg-slate-600 overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-br from-yellow-500/20 to-yellow-600/10 flex items-center justify-center">
-                      <HomeIcon className="w-12 h-12 text-yellow-400/50" />
-                    </div>
+                    {(property as any).images && (property as any).images.length > 0 ? (
+                      <img 
+                        src={(property as any).images[0].imageUrl} 
+                        alt={property.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-yellow-500/20 to-yellow-600/10 flex items-center justify-center">
+                        <HomeIcon className="w-12 h-12 text-yellow-400/50" />
+                      </div>
+                    )}
                   </div>
 
                   {/* Content */}
