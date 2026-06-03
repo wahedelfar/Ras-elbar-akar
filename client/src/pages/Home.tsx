@@ -170,7 +170,13 @@ export default function Home() {
                         <p className="text-gray-400 text-xs">ج.م</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-yellow-400 font-bold">{property.type}</p>
+                        <p className="text-yellow-400 font-bold">
+                          {property.type === 'apartment' ? 'شقة' : 
+                           property.type === 'villa' ? 'فيلا' : 
+                           property.type === 'house' ? 'منزل' : 
+                           property.type === 'land' ? 'أرض' : 
+                           property.type === 'commercial' ? 'تجاري' : property.type}
+                        </p>
                         <p className="text-gray-400 text-xs">نوع</p>
                       </div>
                     </div>
