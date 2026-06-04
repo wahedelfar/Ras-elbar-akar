@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
+import PropertyDetailAdvanced from "./pages/PropertyDetailAdvanced";
 import AddProperty from "./pages/AddProperty";
 import EditProperty from "./pages/EditProperty";
 import UserDashboard from "./pages/UserDashboard";
@@ -31,7 +32,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/properties"} component={Properties} />
-      <Route path={"/property/:id"} component={PropertyDetail} />
+      <Route path="/property/:id" component={PropertyDetailAdvanced} />
       <Route path={"/add-property"} component={AddProperty} />
       <Route path={"/edit-property/:id"} component={EditProperty} />
       <Route path={"/dashboard"} component={UserDashboard} />

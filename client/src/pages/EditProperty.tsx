@@ -37,6 +37,9 @@ export default function EditProperty() {
     },
   });
 
+  const deleteImage = trpc.propertyImages.delete.useMutation();
+  const addImageUrl = trpc.propertyImages.addExternalUrl.useMutation();
+
   useEffect(() => {
     if (property) {
       setFormData({
@@ -96,7 +99,8 @@ export default function EditProperty() {
       const fullPhoneNumber = `+20${cleanPhone}`;
       const fullWhatsappNumber = cleanWhatsapp ? `+20${cleanWhatsapp}` : fullPhoneNumber;
 
-      updateProperty.mutate({
+      // أولاً: تحديث بيانات العقار
+      await updateProperty.mutateAsync({
         id: propertyId || 0,
         title: formData.title,
         description: formData.description,
@@ -108,6 +112,27 @@ export default function EditProperty() {
         phoneNumber: fullPhoneNumber,
         whatsappNumber: fullWhatsappNumber,
       });
+
+      // ثانياً: تحديث الصور - حذف القديمة وإضافة الجديدة
+      if (property?.images) {
+        for (const image of property.images) {
+          if (!formData.imageUrls.includes(image.imageUrl)) {
+            // حذف الصور التي تم إزالتها
+            deleteImage.mutate(image.id);
+          }
+        }
+      }
+
+      // إضافة الصور الجديدة
+      const existingUrls = property?.images?.map(img => img.imageUrl) || [];
+      for (const url of formData.imageUrls) {
+        if (!existingUrls.includes(url)) {
+          addImageUrl.mutate({
+            propertyId: propertyId || 0,
+            imageUrl: url,
+          });
+        }
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -255,6 +280,58 @@ export default function EditProperty() {
                 placeholder="01001234567"
                 className="w-full px-4 py-2 bg-slate-700 border border-yellow-500/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400"
               />
+            </div>
+          </div>
+
+          {/* Image URLs Section */}
+          <div className="bg-slate-700/50 rounded-lg p-4 border border-yellow-500/20">
+            <label className="block text-sm font-semibold mb-3 text-yellow-300">روابط الصور المضافة</label>
+            {formData.imageUrls.length > 0 ? (
+              <div className="space-y-2 mb-4">
+                {formData.imageUrls.map((url, index) => (
+                  <div key={index} className="flex items-center justify-between bg-slate-600 p-3 rounded-lg">
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-yellow-400 hover:text-yellow-300 text-sm truncate flex-1"
+                    >
+                      {url}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, imageUrls: formData.imageUrls.filter((_, i) => i !== index) })}
+                      className="bg-red-500 hover:bg-red-600 text-white rounded-full p-1 ml-2 flex-shrink-0"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm mb-4">لا توجد صور مضافة حالياً</p>
+            )}
+            
+            <div className="flex gap-2">
+              <input
+                type="url"
+                placeholder="https://example.com/image.jpg"
+                id="imageUrl"
+                className="flex-1 px-4 py-2 bg-slate-600 border border-yellow-500/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400"
+              />
+              <Button
+                type="button"
+                onClick={() => {
+                  const input = document.getElementById('imageUrl') as HTMLInputElement;
+                  if (input.value) {
+                    setFormData({ ...formData, imageUrls: [...formData.imageUrls, input.value] });
+                    input.value = '';
+                  }
+                }}
+                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold whitespace-nowrap"
+              >
+                إضافة
+              </Button>
             </div>
           </div>
 
