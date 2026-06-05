@@ -78,28 +78,29 @@ export default function Home() {
       </section>
 
       {/* Search Section */}
-      <section className="bg-background py-12 px-4">
+      <section className="bg-background py-16 px-4">
         <div className="container mx-auto">
-          <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-            <h3 className="text-2xl font-bold text-accent mb-6 text-center">ابحث عن عقارك سواء تمليك أو إيجار</h3>
+          <div className="bg-card rounded-3xl p-12 shadow-2xl border-2 border-accent">
+            <h3 className="text-3xl md:text-4xl font-bold text-accent mb-8 text-center">ابحث عن عقارك سواء تمليك أو إيجار</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Type Filter */}
               <div>
-                <label className="block text-foreground text-sm font-medium mb-2">نوع العقار</label>
-                <select className="w-full bg-input border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:border-accent">
+                <label className="block text-foreground font-semibold mb-3 text-base">نوع العقار</label>
+                <select className="w-full bg-input border-2 border-accent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-accent/80 font-medium">
                   <option value="">جميع الأنواع</option>
                   <option value="villa">فيلا</option>
                   <option value="apartment">شقة</option>
                   <option value="land">أرض</option>
-                  <option value="townhouse">تاون هاوس</option>
+                  <option value="house">منزل</option>
+                  <option value="commercial">تجاري</option>
                 </select>
               </div>
 
               {/* Operation Type */}
               <div>
-                <label className="block text-foreground text-sm font-medium mb-2">نوع العملية</label>
-                <select className="w-full bg-input border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:border-accent">
+                <label className="block text-foreground font-semibold mb-3 text-base">نوع العملية</label>
+                <select className="w-full bg-input border-2 border-accent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-accent/80 font-medium">
                   <option value="">الكل</option>
                   <option value="sale">بيع</option>
                   <option value="rent">إيجار</option>
@@ -108,8 +109,8 @@ export default function Home() {
 
               {/* Location */}
               <div>
-                <label className="block text-gray-300 text-sm font-medium mb-2">المنطقة</label>
-                <select className="w-full bg-slate-700 border border-yellow-500/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-yellow-400">
+                <label className="block text-foreground font-semibold mb-3 text-base">المنطقة</label>
+                <select className="w-full bg-input border-2 border-accent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-accent/80 font-medium">
                   <option value="">جميع المناطق</option>
                   <option value="kings">منطقة الملوك</option>
                   <option value="51-mercy">من شارع 51 لمسجد الرحمة</option>
@@ -119,9 +120,21 @@ export default function Home() {
                   <option value="consultants">منطقة المستشارين</option>
                 </select>
               </div>
+
+              {/* Price Range */}
+              <div>
+                <label className="block text-foreground font-semibold mb-3 text-base">نطاق السعر</label>
+                <select className="w-full bg-input border-2 border-accent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-accent/80 font-medium">
+                  <option value="">جميع الأسعار</option>
+                  <option value="0-500000">أقل من 500 ألف</option>
+                  <option value="500000-1000000">500 ألف - مليون</option>
+                  <option value="1000000-5000000">مليون - 5 مليون</option>
+                  <option value="5000000+">أكثر من 5 مليون</option>
+                </select>
+              </div>
             </div>
 
-            <button onClick={() => setLocation("/properties")} className="w-full mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold rounded-lg transition-all shadow-lg">
+            <button onClick={() => setLocation("/properties")} className="w-full mt-8 px-8 py-4 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl transition-all shadow-lg text-lg">
               ابدأ البحث
             </button>
           </div>

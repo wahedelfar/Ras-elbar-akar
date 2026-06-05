@@ -6,12 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Waves, Upload, Loader2, X, ExternalLink, Info } from "lucide-react";
+import { Waves, Upload, Loader2, X, ExternalLink, Info, Image as ImageIcon } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
 // Country codes for WhatsApp - مصر فقط
 const COUNTRY_CODES = [
   { code: "+20", country: "مصر 🇪🇬" },
+];
+
+// Locations in Ras El Bar
+const RAS_EL_BAR_LOCATIONS = [
+  { value: "kings", label: "منطقة الملوك" },
+  { value: "51-mercy", label: "من شارع 51 لمسجد الرحمة" },
+  { value: "109-51", label: "من شارع 109 لشارع 51" },
+  { value: "expansion", label: "منطقة الإمتداد العمراني" },
+  { value: "elassi", label: "منطقة العاصي" },
+  { value: "consultants", label: "منطقة المستشارين" },
 ];
 
 // Free image hosting sites
@@ -159,7 +169,7 @@ export default function AddProperty() {
         </div>
       </header>
 
-      <div className="container px-4 py-8 max-w-3xl" dir="rtl">
+      <div className="container px-4 py-8 max-w-4xl" dir="rtl">
         <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl shadow-2xl p-8 border border-yellow-500/20">
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">إضافة إعلان عقاري</h1>
           <p className="text-gray-300 mb-8">أضف تفاصيل العقار الخاص بك بشكل كامل</p>
@@ -249,17 +259,21 @@ export default function AddProperty() {
               </div>
             </div>
 
-            {/* Location */}
+            {/* Location - Select instead of Input */}
             <div>
               <label className="block text-sm font-semibold mb-2 text-yellow-300">الموقع *</label>
-              <Input
-                required
-                placeholder="مثال: حي الشرقية، رأس البر"
-                value={location}
-                onChange={(e) => setPropertyLocation(e.target.value)}
-                dir="rtl"
-                className="bg-slate-600/50 border border-yellow-500/30 text-white placeholder:text-gray-400"
-              />
+              <Select value={location} onValueChange={setPropertyLocation}>
+                <SelectTrigger className="bg-slate-600/50 border border-yellow-500/30 text-white">
+                  <SelectValue placeholder="اختر المنطقة" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-700 border border-yellow-500/30">
+                  {RAS_EL_BAR_LOCATIONS.map((loc) => (
+                    <SelectItem key={loc.value} value={loc.value} className="text-white">
+                      {loc.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Phone Numbers with Country Code */}
@@ -315,16 +329,16 @@ export default function AddProperty() {
               {images.length > 0 && (
                 <div className="mt-4 grid grid-cols-4 gap-2">
                   {images.map((image, index) => (
-                    <div key={index} className="relative">
+                    <div key={index} className="relative group">
                       <img
                         src={URL.createObjectURL(image)}
                         alt={`preview-${index}`}
-                        className="w-full h-24 object-cover rounded-lg"
+                        className="w-full h-24 object-cover rounded-lg border border-yellow-500/20"
                       />
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
+                        className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -341,7 +355,7 @@ export default function AddProperty() {
                 <div>
                   <p className="font-semibold text-yellow-300 mb-2">إضافة صور من روابط مباشرة</p>
                   <p className="text-sm text-gray-300 mb-3">
-                    إذا كانت لديك صور مرفوعة على الإنترنت، يمكنك إضافة رابطها مباشرة هنا. استخدم مواقع رفع الصور المجانية أدناه:
+                    أضف روابط الصور المباشرة (مثل: https://i.ibb.co/...png). يدعم جميع مواقع الصور الموثوقة:
                   </p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
                     {FREE_IMAGE_HOSTS.map((host) => (
@@ -365,7 +379,7 @@ export default function AddProperty() {
               <div className="flex gap-2 mb-4">
                 <Input
                   type="url"
-                  placeholder="https://example.com/image.jpg"
+                  placeholder="https://i.ibb.co/G4Rnmt0L/file.png"
                   value={newImageUrl}
                   onChange={(e) => setNewImageUrl(e.target.value)}
                   dir="ltr"
@@ -382,26 +396,35 @@ export default function AddProperty() {
 
               {imageUrls.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-semibold text-yellow-300">الروابط المضافة:</p>
-                  {imageUrls.map((url, index) => (
-                    <div key={index} className="flex items-center justify-between bg-slate-700 p-3 rounded-lg">
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-yellow-400 hover:text-yellow-300 text-sm truncate flex-1"
-                      >
-                        {url}
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => removeImageUrl(index)}
-                        className="bg-red-500 hover:bg-red-600 text-white rounded-full p-1 ml-2"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
+                  <p className="text-sm font-semibold text-yellow-300">الصور المضافة:</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {imageUrls.map((url, index) => (
+                      <div key={index} className="relative group">
+                        <div className="relative w-full h-24 bg-slate-700 rounded-lg border border-yellow-500/20 overflow-hidden">
+                          <img
+                            src={url}
+                            alt={`url-preview-${index}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = '<div class="flex items-center justify-center h-full"><svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
+                              }
+                            }}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeImageUrl(index)}
+                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
