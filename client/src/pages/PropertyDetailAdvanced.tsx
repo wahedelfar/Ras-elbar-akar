@@ -14,6 +14,15 @@ const convertToArabicNumbers = (str: string): string => {
   return str.replace(/[0-9]/g, (digit) => arabicMap[digit] || digit);
 };
 
+// دالة لتنسيق رقم الهاتف
+const formatPhoneNumber = (phone: string): string => {
+  let cleaned = phone.replace(/[^0-9+]/g, '');
+  if (cleaned.startsWith('+2020')) {
+    cleaned = cleaned.replace('+2020', '+20');
+  }
+  return cleaned;
+};
+
 // دالة تنسيق السعر بفواصل
 const formatPrice = (price: number | string): string => {
   const numPrice = typeof price === 'string' ? parseFloat(price) : price;
@@ -233,18 +242,18 @@ export default function PropertyDetailAdvanced() {
             <div className="bg-card rounded-xl p-6 border border-border">
               <h3 className="text-lg font-bold text-foreground mb-4">معلومات المعلن</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                   <span className="text-muted-foreground">رقم الهاتف</span>
-                   <a href={`tel:${property.phoneNumber}`} className="text-accent hover:text-accent/80 font-semibold text-orange-600">
-                     {convertToArabicNumbers(property.phoneNumber)}
-                   </a>
-                 </div>
-                 <div className="flex items-center justify-between">
-                   <span className="text-muted-foreground">الواتساب</span>
-                   <a href={`https://wa.me/${property.whatsappNumber || property.phoneNumber}`} target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 font-semibold text-orange-600">
-                     {convertToArabicNumbers(property.whatsappNumber || property.phoneNumber)}
-                   </a>
-                 </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">رقم الهاتف</span>
+                    <a href={`tel:${property.phoneNumber}`} className="text-accent hover:text-accent/80 font-semibold text-orange-600">
+                      {convertToArabicNumbers(formatPhoneNumber(property.phoneNumber))}
+                    </a>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">الواتساب</span>
+                    <a href={`https://wa.me/${property.whatsappNumber || property.phoneNumber}`} target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 font-semibold text-orange-600">
+                      {convertToArabicNumbers(formatPhoneNumber(property.whatsappNumber || property.phoneNumber))}
+                    </a>
+                  </div>
               </div>
             </div>
 

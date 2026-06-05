@@ -13,6 +13,15 @@ const convertToArabicNumbers = (str: string): string => {
   return str.replace(/[0-9]/g, (digit) => arabicMap[digit] || digit);
 };
 
+// دالة لتنسيق رقم الهاتف
+const formatPhoneNumber = (phone: string): string => {
+  let cleaned = phone.replace(/[^0-9+]/g, '');
+  if (cleaned.startsWith('+2020')) {
+    cleaned = cleaned.replace('+2020', '+20');
+  }
+  return cleaned;
+};
+
 // دالة تنسيق السعر بفواصل
 const formatPrice = (price: number | string): string => {
   const numPrice = typeof price === 'string' ? parseFloat(price) : price;
@@ -180,7 +189,7 @@ export default function PropertyDetail() {
               <div className="bg-accent/10 rounded-lg p-4">
                 <p className="text-sm text-muted-foreground mb-1">رقم الهاتف</p>
                 <p className="font-bold text-lg text-orange-600">
-                  {convertToArabicNumbers(property.phoneNumber)}
+                  {convertToArabicNumbers(formatPhoneNumber(property.phoneNumber))}
                 </p>
               </div>
 
