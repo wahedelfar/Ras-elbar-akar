@@ -1,7 +1,28 @@
+import { useState, useEffect } from "react";
 import { useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, MessageCircle, Waves, Home as HomeIcon, Loader2 } from "lucide-react";
+
+// دالة تحويل الأرقام من إنجليزية إلى عربية
+const convertToArabicNumbers = (str: string): string => {
+  const arabicMap: { [key: string]: string } = {
+    '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+    '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+  };
+  return str.replace(/[0-9]/g, (digit) => arabicMap[digit] || digit);
+};
+
+// دالة تنسيق السعر بفواصل
+const formatPrice = (price: number | string): string => {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  const formatted = new Intl.NumberFormat('ar-EG', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numPrice);
+  return convertToArabicNumbers(formatted);
+};
 
 export default function PropertyDetail() {
   const [match, params] = useRoute("/property/:id");
@@ -147,11 +168,7 @@ export default function PropertyDetail() {
             <div className="card-elevated p-8 mb-6 text-center">
               <p className="text-sm text-muted-foreground mb-2">السعر</p>
               <p className="text-5xl font-bold text-primary mb-4 text-orange-600">
-                {new Intl.NumberFormat('ar-EG', {
-                  style: 'decimal',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }).format(Number(property.price))}
+                {formatPrice(property.price)}
               </p>
               <p className="text-muted-foreground">ج.م</p>
             </div>
@@ -163,13 +180,7 @@ export default function PropertyDetail() {
               <div className="bg-accent/10 rounded-lg p-4">
                 <p className="text-sm text-muted-foreground mb-1">رقم الهاتف</p>
                 <p className="font-bold text-lg text-orange-600">
-                  {property.phoneNumber.split('').map(char => {
-                    const arabicMap: { [key: string]: string } = {
-                      '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
-                      '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
-                    };
-                    return arabicMap[char] || char;
-                  }).join('')}
+                  {convertToArabicNumbers(property.phoneNumber)}
                 </p>
               </div>
 

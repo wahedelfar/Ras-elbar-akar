@@ -1,9 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MapPin, Phone, MessageCircle, Share2, Heart, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MapView } from "@/components/Map";
+
+// دالة تحويل الأرقام من إنجليزية إلى عربية
+const convertToArabicNumbers = (str: string): string => {
+  const arabicMap: { [key: string]: string } = {
+    '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+    '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+  };
+  return str.replace(/[0-9]/g, (digit) => arabicMap[digit] || digit);
+};
+
+// دالة تنسيق السعر بفواصل
+const formatPrice = (price: number | string): string => {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  const formatted = new Intl.NumberFormat('ar-EG', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numPrice);
+  return convertToArabicNumbers(formatted);
+};
 
 export default function PropertyDetailAdvanced() {
   const [, setLocation] = useLocation();
@@ -193,7 +213,7 @@ export default function PropertyDetailAdvanced() {
             {/* Price Card */}
             <div className="bg-accent/10 border border-accent rounded-xl p-6 sticky top-24">
               <p className="text-muted-foreground text-sm mb-2">السعر</p>
-              <p className="text-4xl font-bold text-accent mb-4">{property.price.toLocaleString()}</p>
+              <p className="text-4xl font-bold text-orange-600 mb-4">{formatPrice(property.price)}</p>
               <p className="text-muted-foreground text-sm mb-4">ج.م</p>
 
               {/* Contact Buttons */}
@@ -214,17 +234,17 @@ export default function PropertyDetailAdvanced() {
               <h3 className="text-lg font-bold text-foreground mb-4">معلومات المعلن</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">رقم الهاتف</span>
-                  <a href={`tel:${property.phoneNumber}`} className="text-accent hover:text-accent/80 font-semibold">
-                    {property.phoneNumber}
-                  </a>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">الواتساب</span>
-                  <a href={`https://wa.me/${property.whatsappNumber || property.phoneNumber}`} target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 font-semibold">
-                    {property.whatsappNumber || property.phoneNumber}
-                  </a>
-                </div>
+                   <span className="text-muted-foreground">رقم الهاتف</span>
+                   <a href={`tel:${property.phoneNumber}`} className="text-accent hover:text-accent/80 font-semibold text-orange-600">
+                     {convertToArabicNumbers(property.phoneNumber)}
+                   </a>
+                 </div>
+                 <div className="flex items-center justify-between">
+                   <span className="text-muted-foreground">الواتساب</span>
+                   <a href={`https://wa.me/${property.whatsappNumber || property.phoneNumber}`} target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 font-semibold text-orange-600">
+                     {convertToArabicNumbers(property.whatsappNumber || property.phoneNumber)}
+                   </a>
+                 </div>
               </div>
             </div>
 
