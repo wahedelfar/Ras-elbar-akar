@@ -70,7 +70,7 @@ export default function MapPage() {
           <div className="lg:col-span-3">
             <div className="rounded-xl overflow-hidden shadow-2xl border border-yellow-500/20 h-96">
             <MapView
-              initialCenter={{ lat: 31.49176, lng: 31.82175 }}
+              initialCenter={{ lat: 31.4918, lng: 31.8166 }}
               initialZoom={14}
               onMapReady={handleMapReady}
             />

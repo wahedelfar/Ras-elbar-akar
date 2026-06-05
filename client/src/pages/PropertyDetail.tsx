@@ -18,8 +18,8 @@ const formatPrice = (price: number | string): string => {
   const numPrice = typeof price === 'string' ? parseFloat(price) : price;
   const formatted = new Intl.NumberFormat('ar-EG', {
     style: 'decimal',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(numPrice);
   return convertToArabicNumbers(formatted);
 };
