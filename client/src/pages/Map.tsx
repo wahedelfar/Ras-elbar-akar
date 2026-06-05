@@ -11,13 +11,13 @@ export default function MapPage() {
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
 
   const areas = [
-    { id: "kings-area", name: "منطقة الملوك 👑", lat: 31.4680, lng: 31.7710, properties: 156 },
-    { id: "mercy-mosque", name: "المنطقة من شارع 51 لمسجد الرحمة", lat: 31.4670, lng: 31.7700, properties: 134 },
-    { id: "street-51", name: "المنطقة من شارع 109 لشارع 51", lat: 31.4660, lng: 31.7690, properties: 189 },
-    { id: "urban-expansion", name: "منطقة الإمتداد العمراني", lat: 31.4650, lng: 31.7680, properties: 112 },
-    { id: "elassi", name: "منطقة العاصي (من البوابة لكنتاكي)", lat: 31.4640, lng: 31.7670, properties: 98 },
-    { id: "advisors", name: "منطقة المستشارين", lat: 31.4630, lng: 31.7660, properties: 76 },
-    { id: "beach", name: "الشاطئ الرئيسي", lat: 31.4620, lng: 31.7650, properties: 45 },
+    { id: "kings-area", name: "منطقة الملوك 👑", lat: 31.4950, lng: 31.8250, properties: 156 },
+    { id: "mercy-mosque", name: "المنطقة من شارع 51 لمسجد الرحمة", lat: 31.4930, lng: 31.8230, properties: 134 },
+    { id: "street-51", name: "المنطقة من شارع 109 لشارع 51", lat: 31.4910, lng: 31.8210, properties: 189 },
+    { id: "urban-expansion", name: "منطقة الإمتداد العمراني", lat: 31.4890, lng: 31.8190, properties: 112 },
+    { id: "elassi", name: "منطقة العاصي (من البوابة لكنتاكي)", lat: 31.4870, lng: 31.8170, properties: 98 },
+    { id: "advisors", name: "منطقة المستشارين", lat: 31.4850, lng: 31.8150, properties: 76 },
+    { id: "beach", name: "الشاطئ الرئيسي", lat: 31.4830, lng: 31.8130, properties: 45 },
   ];
 
   const handleMapReady = (mapInstance: google.maps.Map) => {
@@ -70,7 +70,7 @@ export default function MapPage() {
           <div className="lg:col-span-3">
             <div className="rounded-xl overflow-hidden shadow-2xl border border-yellow-500/20 h-96">
             <MapView
-              initialCenter={{ lat: 31.4662, lng: 31.7689 }}
+              initialCenter={{ lat: 31.49176, lng: 31.82175 }}
               initialZoom={14}
               onMapReady={handleMapReady}
             />

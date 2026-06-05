@@ -146,7 +146,13 @@ export default function PropertyDetail() {
             {/* Price Card */}
             <div className="card-elevated p-8 mb-6 text-center">
               <p className="text-sm text-muted-foreground mb-2">السعر</p>
-              <p className="text-5xl font-bold text-primary mb-4">{property.price}</p>
+              <p className="text-5xl font-bold text-primary mb-4 text-orange-600">
+                {new Intl.NumberFormat('ar-EG', {
+                  style: 'decimal',
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(Number(property.price))}
+              </p>
               <p className="text-muted-foreground">ج.م</p>
             </div>
 
@@ -156,7 +162,15 @@ export default function PropertyDetail() {
               
               <div className="bg-accent/10 rounded-lg p-4">
                 <p className="text-sm text-muted-foreground mb-1">رقم الهاتف</p>
-                <p className="font-bold text-lg">{property.phoneNumber}</p>
+                <p className="font-bold text-lg text-orange-600">
+                  {property.phoneNumber.split('').map(char => {
+                    const arabicMap: { [key: string]: string } = {
+                      '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+                      '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+                    };
+                    return arabicMap[char] || char;
+                  }).join('')}
+                </p>
               </div>
 
               <a href={`tel:${property.phoneNumber}`}>
