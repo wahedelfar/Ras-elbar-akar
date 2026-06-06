@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Waves, Upload, Loader2, X, ExternalLink, Info, Image as ImageIcon } from "lucide-react";
+import { Waves, Loader2, X, ExternalLink, Info } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
 // Country codes for WhatsApp - مصر فقط
@@ -46,13 +46,11 @@ export default function AddProperty() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode] = useState("+20"); // مصر فقط
   const [whatsappNumber, setWhatsappNumber] = useState("");
-  const [images, setImages] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const createProperty = trpc.properties.create.useMutation();
-  const uploadImage = trpc.propertyImages.upload.useMutation();
   const addExternalImage = trpc.propertyImages.addExternalUrl.useMutation();
 
   if (!isAuthenticated) {
@@ -68,15 +66,7 @@ export default function AddProperty() {
     );
   }
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImages([...images, ...Array.from(e.target.files)]);
-    }
-  };
 
-  const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
-  };
 
   const addImageUrl = () => {
     if (newImageUrl.trim()) {
@@ -116,23 +106,6 @@ export default function AddProperty() {
       });
 
       const propertyId = (propertyResult as any)?.id || (propertyResult as any)?.[0]?.insertId;
-
-      // Upload local images
-      for (const image of images) {
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-          const base64 = event.target?.result as string;
-          const base64Data = base64.split(',')[1];
-          if (propertyId) {
-            await uploadImage.mutateAsync({
-              propertyId: propertyId,
-              imageBase64: base64Data,
-              mimeType: image.type,
-            });
-          }
-        };
-        reader.readAsDataURL(image);
-      }
 
       // Add external image URLs
       for (const url of imageUrls) {
@@ -305,47 +278,6 @@ export default function AddProperty() {
                   className="bg-slate-600/50 border border-yellow-500/30 text-white placeholder:text-gray-400"
                 />
               </div>
-            </div>
-
-            {/* Local Images Upload */}
-            <div>
-              <label className="block text-sm font-semibold mb-2 text-yellow-300">صور العقار - رفع من الجهاز</label>
-              <div className="border-2 border-dashed border-yellow-500/30 rounded-lg p-6 text-center cursor-pointer hover:border-yellow-500/50 transition-colors bg-slate-600/20">
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  id="images"
-                />
-                <label htmlFor="images" className="cursor-pointer">
-                  <Upload className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-                  <p className="font-semibold text-white">اضغط لتحميل الصور</p>
-                  <p className="text-sm text-gray-400">أو اسحب الصور هنا</p>
-                </label>
-              </div>
-
-              {images.length > 0 && (
-                <div className="mt-4 grid grid-cols-4 gap-2">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={URL.createObjectURL(image)}
-                        alt={`preview-${index}`}
-                        className="w-full h-24 object-cover rounded-lg border border-yellow-500/20"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Image URLs Section */}
