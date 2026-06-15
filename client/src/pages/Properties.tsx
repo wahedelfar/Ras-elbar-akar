@@ -216,11 +216,21 @@ export default function Properties() {
                     >
                       <div className="bg-slate-800 border border-yellow-500/20 overflow-hidden h-full flex flex-col rounded-lg hover:shadow-2xl transition-shadow hover:border-yellow-500/50">
                         <div className="bg-gradient-to-br from-blue-600 to-blue-800 h-48 flex items-center justify-center text-white relative overflow-hidden">
-                          {(property as any).images && (property as any).images.length > 0 ? (
+                          {(property as any).images && (property as any).images.length > 0 && (property as any).images[0].imageUrl ? (
                             <img
                               src={(property as any).images[0].imageUrl}
                               alt={property.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              onError={(e) => {
+                                const img = e.target as HTMLImageElement;
+                                img.style.display = 'none';
+                                const parent = img.parentElement;
+                                if (parent) {
+                                  const icon = document.createElement('div');
+                                  icon.innerHTML = '<svg class="w-12 h-12 opacity-30" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L9 5.414V18a1 1 0 102 0V5.414l6.293 6.293a1 1 0 001.414-1.414l-7-7z"></path></svg>';
+                                  parent.appendChild(icon);
+                                }
+                              }}
                             />
                           ) : (
                             <HomeIcon className="w-12 h-12 opacity-30" />
@@ -236,16 +246,19 @@ export default function Properties() {
                           <p className="text-sm text-gray-400 mb-4 line-clamp-2 flex-1">
                             {property.description}
                           </p>
-                          <div className="space-y-3 border-t border-slate-700 pt-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-yellow-400 font-bold text-lg">{formatPrice(property.price)} ج.م</span>
-                              {property.area && (
-                                <span className="text-sm text-gray-400">{property.area} م²</span>
-                              )}
+                          <div className="space-y-2 border-t border-slate-700 pt-3">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-yellow-400 font-bold text-sm">{convertToArabicNumbers(property.id.toString())}-{property.title.split(' ')[0]}</span>
+                              <span className="text-yellow-400 font-bold text-sm">{formatPrice(property.price)} ج.م</span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-400">
-                              <MapPin className="w-4 h-4 flex-shrink-0" />
-                              <span className="line-clamp-1">{property.location}</span>
+                            <div className="flex items-center justify-between text-xs text-gray-400">
+                              {property.area && (
+                                <span>{property.area} م²</span>
+                              )}
+                              <div className="flex items-center gap-1">
+                                <MapPin className="w-3 h-3 flex-shrink-0" />
+                                <span className="line-clamp-1">{property.location}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
