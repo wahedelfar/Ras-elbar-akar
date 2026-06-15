@@ -6,6 +6,26 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Home as HomeIcon, Waves, ChevronLeft, ChevronRight } from "lucide-react";
 
+// دالة تحويل الأرقام من إنجليزية إلى عربية
+const convertToArabicNumbers = (str: string): string => {
+  const arabicMap: { [key: string]: string } = {
+    '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+    '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+  };
+  return str.replace(/[0-9]/g, (digit) => arabicMap[digit] || digit);
+};
+
+// دالة تنسيق السعر بدون فاصلة عشرية
+const formatPrice = (price: number | string): string => {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  const formatted = new Intl.NumberFormat('ar-EG', {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(numPrice);
+  return convertToArabicNumbers(formatted);
+};
+
 export default function Properties() {
   const [, setLocation] = useLocation();
   const [type, setType] = useState("");
@@ -218,7 +238,7 @@ export default function Properties() {
                           </p>
                           <div className="space-y-3 border-t border-slate-700 pt-3">
                             <div className="flex items-center justify-between">
-                              <span className="text-yellow-400 font-bold text-lg">{property.price.toLocaleString()} ج.م</span>
+                              <span className="text-yellow-400 font-bold text-lg">{formatPrice(property.price)} ج.م</span>
                               {property.area && (
                                 <span className="text-sm text-gray-400">{property.area} م²</span>
                               )}
