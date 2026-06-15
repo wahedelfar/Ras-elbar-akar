@@ -26,6 +26,19 @@ const formatPrice = (price: number | string): string => {
   return convertToArabicNumbers(formatted);
 };
 
+// دالة تحويل رموز الموقع إلى أسماء عربية
+const getLocationLabel = (locationCode: string): string => {
+  const locationMap: { [key: string]: string } = {
+    'kings': 'منطقة الملوك',
+    '51-mercy': 'من شارع 51 لمسجد الرحمة',
+    '109-51': 'من شارع 109 لشارع 51',
+    'expansion': 'منطقة الإمتداد العمراني',
+    'elassi': 'منطقة العاصي',
+    'consultants': 'منطقة المستشارين',
+  };
+  return locationMap[locationCode] || locationCode;
+};
+
 export default function Properties() {
   const [, setLocation] = useLocation();
   const [type, setType] = useState("");
@@ -257,7 +270,7 @@ export default function Properties() {
                               )}
                               <div className="flex items-center gap-1">
                                 <MapPin className="w-3 h-3 flex-shrink-0" />
-                                <span className="line-clamp-1">{property.location}</span>
+                                <span className="line-clamp-1">{getLocationLabel(property.location)}</span>
                               </div>
                             </div>
                           </div>
