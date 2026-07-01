@@ -5,6 +5,39 @@ import { Waves, HomeIcon } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 
+// دالة تحويل الأرقام من إنجليزية إلى عربية
+const convertToArabicNumbers = (str: string): string => {
+  const arabicMap: { [key: string]: string } = {
+    '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+    '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+  };
+  return str.replace(/[0-9]/g, (digit) => arabicMap[digit] || digit);
+};
+
+// دالة تنسيق السعر بدون فاصلة عشرية
+const formatPrice = (price: number | string): string => {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  const formatted = new Intl.NumberFormat('ar-EG', {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(numPrice);
+  return convertToArabicNumbers(formatted);
+};
+
+// دالة تحويل رموز الموقع إلى أسماء عربية
+const getLocationLabel = (locationCode: string): string => {
+  const locationMap: { [key: string]: string } = {
+    'kings': 'منطقة الملوك',
+    '51-mercy': 'من شارع 51 لمسجد الرحمة',
+    '109-51': 'من شارع 109 لشارع 51',
+    'expansion': 'منطقة الإمتداد العمراني',
+    'elassi': 'منطقة العاصي',
+    'consultants': 'منطقة المستشارين',
+  };
+  return locationMap[locationCode] || locationCode;
+};
+
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isAuthenticated } = useAuth();
@@ -172,12 +205,12 @@ export default function Home() {
                   {/* Content */}
                   <div className="p-4">
                     <h4 className="text-lg font-bold text-accent mb-2">{property.title}</h4>
-                    <p className="text-muted-foreground text-sm mb-4">{property.location}</p>
+                    <p className="text-muted-foreground text-sm mb-4">{getLocationLabel(property.location)}</p>
 
                     {/* Stats */}
                     <div className="flex justify-between mb-4 pb-4 border-b border-border">
                       <div className="text-center">
-                        <p className="text-accent font-bold">{property.price.toLocaleString()}</p>
+                        <p className="text-accent font-bold">{formatPrice(property.price)}</p>
                         <p className="text-muted-foreground text-xs">ج.م</p>
                       </div>
                       <div className="text-center">

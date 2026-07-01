@@ -5,6 +5,39 @@ import { Waves, Trash2, Eye, EyeOff, Loader2, Users, Building2, BarChart3 } from
 import { getLoginUrl } from "@/const";
 import { useState } from "react";
 
+// دالة تحويل الأرقام من إنجليزية إلى عربية
+const convertToArabicNumbers = (str: string): string => {
+  const arabicMap: { [key: string]: string } = {
+    '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+    '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+  };
+  return str.replace(/[0-9]/g, (digit) => arabicMap[digit] || digit);
+};
+
+// دالة تنسيق السعر بدون فاصلة عشرية
+const formatPrice = (price: number | string): string => {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  const formatted = new Intl.NumberFormat('ar-EG', {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(numPrice);
+  return convertToArabicNumbers(formatted);
+};
+
+// دالة تحويل رموز الموقع إلى أسماء عربية
+const getLocationLabel = (locationCode: string): string => {
+  const locationMap: { [key: string]: string } = {
+    'kings': 'منطقة الملوك',
+    '51-mercy': 'من شارع 51 لمسجد الرحمة',
+    '109-51': 'من شارع 109 لشارع 51',
+    'expansion': 'منطقة الإمتداد العمراني',
+    'elassi': 'منطقة العاصي',
+    'consultants': 'منطقة المستشارين',
+  };
+  return locationMap[locationCode] || locationCode;
+};
+
 export default function AdminDashboard() {
   const { isAuthenticated, user } = useAuth();
   const [activeTab, setActiveTab] = useState<'properties' | 'stats'>('properties');
@@ -136,7 +169,7 @@ export default function AdminDashboard() {
                         {property.operationType === 'sale' ? 'بيع' : 'إيجار'}
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground">{property.location} • {property.price.toLocaleString()} ج.م</p>
+                    <p className="text-sm text-muted-foreground">{getLocationLabel(property.location)} • {formatPrice(property.price)} ج.م</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
