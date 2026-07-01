@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Waves, Loader2, X, ExternalLink, Info } from "lucide-react";
+import { Waves, Loader2, X, ExternalLink, Info, Upload, Image as ImageIcon } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
 // Country codes for WhatsApp - مصر فقط
@@ -48,10 +48,13 @@ export default function AddProperty() {
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [newImageUrl, setNewImageUrl] = useState("");
+  const [uploadedImages, setUploadedImages] = useState<{ file: File; preview: string; key?: string }[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ [key: number]: number }>({});
 
   const createProperty = trpc.properties.create.useMutation();
   const addExternalImage = trpc.propertyImages.addExternalUrl.useMutation();
+  const uploadImage = trpc.propertyImages.upload.useMutation();
 
   if (!isAuthenticated) {
     return (
@@ -77,6 +80,30 @@ export default function AddProperty() {
 
   const removeImageUrl = (index: number) => {
     setImageUrls(imageUrls.filter((_, i) => i !== index));
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files;
+    if (!files) return;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (!file.type.startsWith('image/')) {
+        alert('يرجى اختيار ملفات صور فقط');
+        continue;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const preview = event.target?.result as string;
+        setUploadedImages((prev) => [...prev, { file, preview }]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeUploadedImage = (index: number) => {
+    setUploadedImages(uploadedImages.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,6 +141,29 @@ export default function AddProperty() {
             propertyId: propertyId,
             imageUrl: url,
           });
+        }
+      }
+
+      // Upload file-based images
+      for (let i = 0; i < uploadedImages.length; i++) {
+        const { file } = uploadedImages[i];
+        if (propertyId && file) {
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            const base64 = event.target?.result as string;
+            const base64Data = base64.split(',')[1];
+            try {
+              await uploadImage.mutateAsync({
+                propertyId: propertyId,
+                imageBase64: base64Data,
+                mimeType: file.type,
+              });
+              setUploadProgress((prev) => ({ ...prev, [i]: 100 }));
+            } catch (error) {
+              console.error('Error uploading image:', error);
+            }
+          };
+          reader.readAsDataURL(file);
         }
       }
 
@@ -278,6 +328,66 @@ export default function AddProperty() {
                   className="bg-slate-600/50 border border-yellow-500/30 text-white placeholder:text-gray-400"
                 />
               </div>
+            </div>
+
+            {/* File Upload Section */}
+            <div className="bg-slate-600/30 rounded-lg p-4 border border-yellow-500/20 mb-6">
+              <div className="flex items-start gap-2 mb-4">
+                <Upload className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-semibold text-yellow-300 mb-2">رفع صور من جهازك</p>
+                  <p className="text-sm text-gray-300 mb-3">
+                    يمكنك رفع صور متعددة مباشرة من جهازك. الصور ستُحفظ بجودة عالية.
+                  </p>
+                </div>
+              </div>
+
+              <label className="block">
+                <div className="border-2 border-dashed border-yellow-500/50 rounded-lg p-6 text-center cursor-pointer hover:border-yellow-400 hover:bg-slate-700/50 transition-all">
+                  <ImageIcon className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
+                  <p className="text-yellow-300 font-semibold mb-1">انقر لاختيار صور أو اسحبها هنا</p>
+                  <p className="text-sm text-gray-400">يدعم: JPG, PNG, WebP (حد أقصى 5 صور)</p>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    disabled={uploadedImages.length >= 5}
+                  />
+                </div>
+              </label>
+
+              {uploadedImages.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm font-semibold text-yellow-300">الصور المرفوعة ({uploadedImages.length}/5):</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {uploadedImages.map((img, index) => (
+                      <div key={index} className="relative group">
+                        <div className="relative w-full h-24 bg-slate-700 rounded-lg border border-yellow-500/20 overflow-hidden">
+                          <img
+                            src={img.preview}
+                            alt={`preview-${index}`}
+                            className="w-full h-full object-cover"
+                          />
+                          {uploadProgress[index] !== undefined && uploadProgress[index] < 100 && (
+                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                              <div className="text-white text-xs font-semibold">{uploadProgress[index]}%</div>
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeUploadedImage(index)}
+                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Image URLs Section */}
