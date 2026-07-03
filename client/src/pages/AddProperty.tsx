@@ -144,27 +144,37 @@ export default function AddProperty() {
         }
       }
 
-      // Upload file-based images
-      for (let i = 0; i < uploadedImages.length; i++) {
-        const { file } = uploadedImages[i];
-        if (propertyId && file) {
-          const reader = new FileReader();
-          reader.onload = async (event) => {
-            const base64 = event.target?.result as string;
-            const base64Data = base64.split(',')[1];
-            try {
-              await uploadImage.mutateAsync({
-                propertyId: propertyId,
-                imageBase64: base64Data,
-                mimeType: file.type,
-              });
-              setUploadProgress((prev) => ({ ...prev, [i]: 100 }));
-            } catch (error) {
-              console.error('Error uploading image:', error);
+      // Upload file-based images - wait for all uploads to complete
+      if (uploadedImages.length > 0) {
+        const uploadPromises = uploadedImages.map((imgData, i) => {
+          return new Promise<void>((resolve) => {
+            const { file } = imgData;
+            if (propertyId && file) {
+              const reader = new FileReader();
+              reader.onload = async (event) => {
+                const base64 = event.target?.result as string;
+                const base64Data = base64.split(',')[1];
+                try {
+                  await uploadImage.mutateAsync({
+                    propertyId: propertyId,
+                    imageBase64: base64Data,
+                    mimeType: file.type,
+                  });
+                  setUploadProgress((prev) => ({ ...prev, [i]: 100 }));
+                } catch (error) {
+                  console.error('Error uploading image:', error);
+                }
+                resolve();
+              };
+              reader.readAsDataURL(file);
+            } else {
+              resolve();
             }
-          };
-          reader.readAsDataURL(file);
-        }
+          });
+        });
+
+        // Wait for all uploads to complete before redirecting
+        await Promise.all(uploadPromises);
       }
 
       setLocation("/dashboard");
