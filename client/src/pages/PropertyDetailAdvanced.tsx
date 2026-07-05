@@ -3,7 +3,6 @@ import { useLocation, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MapPin, Phone, MessageCircle, Share2, Heart, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MapView } from "@/components/Map";
 import { PropertySchema } from "@/components/PropertySchema";
 
 // دالة تحويل الأرقام من إنجليزية إلى عربية
@@ -190,18 +189,9 @@ export default function PropertyDetailAdvanced() {
               {/* Location */}
               <div>
                 <h3 className="text-lg font-bold text-foreground mb-3">الموقع</h3>
-                <div className="flex items-start gap-2 mb-4">
+                <div className="flex items-start gap-2">
                   <MapPin className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                   <p className="text-foreground">{property.location}</p>
-                </div>
-
-                {/* Map */}
-                <div className="h-80 rounded-lg overflow-hidden border border-border">
-                  <MapView
-                    initialCenter={{ lat: 31.2654, lng: 31.5497 }}
-                    initialZoom={13}
-                    className="w-full h-full"
-                  />
                 </div>
               </div>
 
