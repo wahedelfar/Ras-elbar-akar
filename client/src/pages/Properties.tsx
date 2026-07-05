@@ -261,7 +261,7 @@ export default function Properties() {
                           </p>
                           <div className="space-y-2 border-t border-slate-700 pt-3">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-yellow-400 font-bold text-sm">{convertToArabicNumbers(property.id.toString())}-{property.title.split(' ')[0]}</span>
+                              <span className="text-yellow-400 font-bold text-sm">{(property as any).referenceNumber || 'RB-' + property.id}</span>
                               <span className="text-yellow-400 font-bold text-sm">{formatPrice(property.price)} ج.م</span>
                             </div>
                             <div className="flex items-center justify-between text-xs text-gray-400">

@@ -59,6 +59,7 @@ export const properties = mysqlTable(
     location: varchar("location", { length: 255 }).notNull(),
     phoneNumber: varchar("phoneNumber", { length: 20 }).notNull(),
     whatsappNumber: varchar("whatsappNumber", { length: 20 }),
+    referenceNumber: varchar("referenceNumber", { length: 20 }).unique(),
     isActive: boolean("isActive").default(true).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

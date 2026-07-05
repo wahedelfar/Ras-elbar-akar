@@ -158,7 +158,10 @@ export default function Home() {
 
                   {/* Content */}
                   <div className="p-4">
-                    <h4 className="text-lg font-bold text-accent mb-2">{property.title}</h4>
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="text-lg font-bold text-accent">{property.title}</h4>
+                      <span className="text-xs bg-accent/10 text-accent px-2 py-1 rounded">{(property as any).referenceNumber || 'RB-' + property.id}</span>
+                    </div>
                     <p className="text-muted-foreground text-sm mb-4">{getLocationLabel(property.location)}</p>
 
                     {/* Stats */}

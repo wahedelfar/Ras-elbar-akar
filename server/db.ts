@@ -90,11 +90,28 @@ export async function getUserByOpenId(openId: string) {
 }
 
 /**
+ * Generate reference number (RB-001, RB-002, etc.)
+ */
+export async function generateReferenceNumber() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.select({ count: count() }).from(properties);
+  const nextNumber = (result[0]?.count || 0) + 1;
+  return `RB-${String(nextNumber).padStart(3, '0')}`;
+}
+
+/**
  * Properties queries
  */
 export async function createProperty(data: InsertProperty) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  
+  // Generate reference number if not provided
+  if (!data.referenceNumber) {
+    data.referenceNumber = await generateReferenceNumber();
+  }
   
   const result = await db.insert(properties).values(data);
   return result[0];

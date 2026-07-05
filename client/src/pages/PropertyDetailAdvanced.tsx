@@ -230,6 +230,17 @@ export default function PropertyDetailAdvanced() {
               </div>
             </div>
 
+            {/* Property ID */}
+            <div className="bg-card rounded-xl p-6 border border-border">
+              <h3 className="text-lg font-bold text-foreground mb-4">معلومات الإعلان</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">رقم الإعلان</span>
+                  <span className="text-accent font-bold text-orange-600">{(property as any).referenceNumber || 'RB-' + property.id}</span>
+                </div>
+              </div>
+            </div>
+
             {/* Advertiser Info */}
             <div className="bg-card rounded-xl p-6 border border-border">
               <h3 className="text-lg font-bold text-foreground mb-4">معلومات المعلن</h3>
