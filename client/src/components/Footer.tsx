@@ -49,15 +49,15 @@ export default function Footer() {
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <span>+20 1234567890</span>
+                <span>01026569682</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span>info@raselbar.com</span>
+                <span>raas.elbar@yahoo.com</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Home className="w-4 h-4" />
-                <span>رأس البر، الدقهلية</span>
+                <span>رأس البر، دمياط</span>
               </div>
             </div>
           </div>

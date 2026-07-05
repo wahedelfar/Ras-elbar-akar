@@ -198,6 +198,58 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Paid Ads Section */}
+      <section className="bg-gradient-to-b from-slate-50 to-white py-16 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-accent mb-12 text-center">شركاؤنا</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Ad Banner 1 */}
+            <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 h-64 bg-gradient-to-br from-blue-500 to-blue-700">
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all" />
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">إعلان مدفوع</div>
+              <div className="h-full flex flex-col items-center justify-center text-center px-4 text-white">
+                <div className="text-4xl font-bold mb-2">🏢</div>
+                <h3 className="text-xl font-bold mb-2">شركة النيل للعقارات</h3>
+                <p className="text-sm opacity-90">أفضل الخدمات العقارية</p>
+              </div>
+            </div>
+
+            {/* Ad Banner 2 */}
+            <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 h-64 bg-gradient-to-br from-emerald-500 to-emerald-700">
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all" />
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">إعلان مدفوع</div>
+              <div className="h-full flex flex-col items-center justify-center text-center px-4 text-white">
+                <div className="text-4xl font-bold mb-2">🏠</div>
+                <h3 className="text-xl font-bold mb-2">عقارات الساحل</h3>
+                <p className="text-sm opacity-90">تطوير عقاري متميز</p>
+              </div>
+            </div>
+
+            {/* Ad Banner 3 */}
+            <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 h-64 bg-gradient-to-br from-purple-500 to-purple-700">
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all" />
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">إعلان مدفوع</div>
+              <div className="h-full flex flex-col items-center justify-center text-center px-4 text-white">
+                <div className="text-4xl font-bold mb-2">🌆</div>
+                <h3 className="text-xl font-bold mb-2">رأس البر للاستثمار</h3>
+                <p className="text-sm opacity-90">فرص استثمارية ذهبية</p>
+              </div>
+            </div>
+
+            {/* Ad Banner 4 */}
+            <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 h-64 bg-gradient-to-br from-orange-500 to-orange-700">
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all" />
+              <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">إعلان مدفوع</div>
+              <div className="h-full flex flex-col items-center justify-center text-center px-4 text-white">
+                <div className="text-4xl font-bold mb-2">🏗️</div>
+                <h3 className="text-xl font-bold mb-2">مقاولون رأس البر</h3>
+                <p className="text-sm opacity-90">بناء وتطوير عقاري</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* About Section */}
       <section className="bg-background py-12 px-4 border-t border-border">
         <div className="container mx-auto">
