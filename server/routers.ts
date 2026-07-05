@@ -7,12 +7,21 @@ import * as db from "./db";
 import { storagePut } from "./storage";
 import { eq, desc } from "drizzle-orm";
 import { users, properties, propertyImages } from "../drizzle/schema";
+import { generateSitemap } from "./sitemap";
 
 // Re-export for use in routers
 
 
 export const appRouter = router({
   system: systemRouter,
+  
+  // SEO endpoints
+  seo: router({
+    sitemap: publicProcedure.query(async () => {
+      return await generateSitemap();
+    }),
+  }),
+  
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

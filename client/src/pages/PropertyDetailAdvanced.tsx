@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { MapPin, Phone, MessageCircle, Share2, Heart, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MapView } from "@/components/Map";
+import { PropertySchema } from "@/components/PropertySchema";
 
 // دالة تحويل الأرقام من إنجليزية إلى عربية
 const convertToArabicNumbers = (str: string): string => {
@@ -100,6 +101,7 @@ export default function PropertyDetailAdvanced() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      {property && <PropertySchema property={property} />}
       {/* Header */}
       <header className="sticky top-0 z-40 bg-card border-b border-border shadow-lg">
         <div className="container px-4 py-4 flex items-center justify-between">
