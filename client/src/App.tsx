@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -29,20 +30,25 @@ function Router() {
   }
 
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/properties"} component={Properties} />
-      <Route path="/property/:id" component={PropertyDetailAdvanced} />
-      <Route path={"/add-property"} component={AddProperty} />
-      <Route path={"/edit-property/:id"} component={EditProperty} />
-      <Route path={"/dashboard"} component={UserDashboard} />
-      <Route path={"/admin"} component={AdminDashboard} />
-      <Route path={"/profile"} component={Profile} />
-      <Route path={"/map"} component={Map} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-1">
+        <Switch>
+          <Route path={"/"} component={Home} />
+          <Route path={"/properties"} component={Properties} />
+          <Route path="/property/:id" component={PropertyDetailAdvanced} />
+          <Route path={"/add-property"} component={AddProperty} />
+          <Route path={"/edit-property/:id"} component={EditProperty} />
+          <Route path={"/dashboard"} component={UserDashboard} />
+          <Route path={"/admin"} component={AdminDashboard} />
+          <Route path={"/profile"} component={Profile} />
+          <Route path={"/map"} component={Map} />
+          <Route path={"/404"} component={NotFound} />
+          {/* Final fallback route */}
+          <Route component={NotFound} />
+        </Switch>
+      </div>
+      <Footer />
+    </div>
   );
 }
 

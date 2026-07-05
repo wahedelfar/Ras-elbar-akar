@@ -340,65 +340,7 @@ export default function AddProperty() {
               </div>
             </div>
 
-            {/* File Upload Section */}
-            <div className="bg-slate-600/30 rounded-lg p-4 border border-yellow-500/20 mb-6">
-              <div className="flex items-start gap-2 mb-4">
-                <Upload className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-semibold text-yellow-300 mb-2">رفع صور من جهازك</p>
-                  <p className="text-sm text-gray-300 mb-3">
-                    يمكنك رفع صور متعددة مباشرة من جهازك. الصور ستُحفظ بجودة عالية.
-                  </p>
-                </div>
-              </div>
 
-              <label className="block">
-                <div className="border-2 border-dashed border-yellow-500/50 rounded-lg p-6 text-center cursor-pointer hover:border-yellow-400 hover:bg-slate-700/50 transition-all">
-                  <ImageIcon className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-                  <p className="text-yellow-300 font-semibold mb-1">انقر لاختيار صور أو اسحبها هنا</p>
-                  <p className="text-sm text-gray-400">يدعم: JPG, PNG, WebP (حد أقصى 5 صور)</p>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    disabled={uploadedImages.length >= 5}
-                  />
-                </div>
-              </label>
-
-              {uploadedImages.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  <p className="text-sm font-semibold text-yellow-300">الصور المرفوعة ({uploadedImages.length}/5):</p>
-                  <div className="grid grid-cols-4 gap-2">
-                    {uploadedImages.map((img, index) => (
-                      <div key={index} className="relative group">
-                        <div className="relative w-full h-24 bg-slate-700 rounded-lg border border-yellow-500/20 overflow-hidden">
-                          <img
-                            src={img.preview}
-                            alt={`preview-${index}`}
-                            className="w-full h-full object-cover"
-                          />
-                          {uploadProgress[index] !== undefined && uploadProgress[index] < 100 && (
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                              <div className="text-white text-xs font-semibold">{uploadProgress[index]}%</div>
-                            </div>
-                          )}
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeUploadedImage(index)}
-                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
 
             {/* Image URLs Section */}
             <div className="bg-slate-600/30 rounded-lg p-4 border border-yellow-500/20">
