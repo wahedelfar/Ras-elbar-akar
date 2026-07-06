@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import Map from "./pages/Map";
 import { useAuth } from "./_core/hooks/useAuth";
 import { Loader2 } from "lucide-react";
+import { CookieConsent } from "./components/CookieConsent";
 
 function Router() {
   const { loading } = useAuth();
@@ -62,6 +63,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <CookieConsent />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
