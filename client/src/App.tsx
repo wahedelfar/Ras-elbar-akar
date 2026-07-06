@@ -18,6 +18,9 @@ import Map from "./pages/Map";
 import { useAuth } from "./_core/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 import { CookieConsent } from "./components/CookieConsent";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import AboutUs from "./pages/AboutUs";
 
 function Router() {
   const { loading } = useAuth();
@@ -42,7 +45,10 @@ function Router() {
           <Route path={"/dashboard"} component={UserDashboard} />
           <Route path={"/admin"} component={AdminDashboard} />
           <Route path={"/profile"} component={Profile} />
-          <Route path={"/map"} component={Map} />
+          <Route path={"map"} component={Map} />
+          <Route path={"/privacy-policy"} component={PrivacyPolicy} />
+          <Route path={"/terms-of-service"} component={TermsOfService} />
+          <Route path={"/about-us"} component={AboutUs} />
           <Route path={"/404"} component={NotFound} />
           {/* Final fallback route */}
           <Route component={NotFound} />

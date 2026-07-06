@@ -36,6 +36,11 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <a href="/about-us" className="text-muted-foreground hover:text-accent transition-colors">
+                  من نحن
+                </a>
+              </li>
+              <li>
                 <a href="/" className="text-muted-foreground hover:text-accent transition-colors">
                   الرئيسية
                 </a>
@@ -60,6 +65,23 @@ export default function Footer() {
                 <span>رأس البر، دمياط</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Legal Links */}
+        <div className="border-t border-border pt-8 mb-8">
+          <div className="flex flex-wrap justify-center gap-6 text-sm mb-8">
+            <a href="/privacy-policy" className="text-muted-foreground hover:text-accent transition-colors">
+              سياسة الخصوصية
+            </a>
+            <span className="text-border">|</span>
+            <a href="/terms-of-service" className="text-muted-foreground hover:text-accent transition-colors">
+              شروط الاستخدام
+            </a>
+            <span className="text-border">|</span>
+            <a href="/about-us" className="text-muted-foreground hover:text-accent transition-colors">
+              من نحن
+            </a>
           </div>
         </div>
 
